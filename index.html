@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sportzfy HD - JW Player</title>
+
+  <!-- JW Player -->
+  <script src="https://cdn.jsdelivr.net/npm/swarmcloud-jwplayer-hlsjs@0.1.1/dist/jwplayer.hlsjs.min.js"></script>
+  <script src="https://ssl.p.jwpcdn.com/player/v/8.30.0/jwplayer.js"></script>
+  <script>jwplayer.key="uoW6qHjBL3KNudxKVnwa3rt5LlTakbko9e6aQ6VUyKQ=";</script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    body {margin:0;font-family:Arial,sans-serif;background:#111;color:white;height:100vh;display:flex;flex-direction:column;}
+    .navbar {display:flex;align-items:center;justify-content:space-between;background:#2b2b2b;padding:15px 10px;position:fixed;top:0;left:0;width:100%;z-index:1000;}
+    .navbar .left {display:flex;align-items:center;gap:20px;}
+    .navbar .left i {font-size:30px;cursor:pointer;}
+    .navbar .title {font-size:20px;font-weight:bold;}
+    .navbar .right {display:flex;gap:15px;}
+    .navbar .right i {font-size:18px;cursor:pointer;}
+    .live-box {background:black;width:100%;height:220px;display:flex;align-items:center;justify-content:center;position:fixed;top:55px;left:0;z-index:999;}
+    #player {width:100%;height:100%;}
+    .tabs-wrapper {display:flex;position:fixed;top:275px;left:0;width:100%;background:#222;z-index:998;}
+    .tabs-fixed {background:#333;border:none;color:white;padding:8px 15px;border-radius:10px;cursor:pointer;white-space:nowrap;margin:10px;flex-shrink:0;}
+    .tabs-fixed.active {background:red;}
+    .tabs-scroll {display:flex;overflow-x:auto;gap:10px;padding:10px;flex:1;}
+    .tabs-scroll button {background:#333;border:none;color:white;padding:8px 15px;border-radius:10px;cursor:pointer;white-space:nowrap;flex-shrink:0;}
+    .tabs-scroll button.active {background:red;}
+    .channel-container {flex:1;margin-top:325px;margin-bottom:60px;overflow-y:auto;}
+    .channel-grid {display:grid;grid-template-columns:repeat(3,1fr);gap:15px;padding:15px;}
+    .channel {cursor:pointer;}
+    .channel-card {background:#1e1e1e;padding:10px;border-radius:20px;box-shadow:0 10px 20px rgba(0,0,0,0.5);transition:transform .3s,box-shadow .3s;text-align:center;}
+    .channel-card:hover {transform:scale(1.05);box-shadow:0 6px 12px rgba(255,0,0,0.4);}
+    .channel-logo {width:80px;height:80px;border-radius:50%;border:2px solid #fff;object-fit:cover;}
+    .channel-name {margin-top:10px;font-size:15px;font-weight:bold;color:#ddd;}
+    .bottom-nav {position:fixed;bottom:0;left:0;width:100%;background:#1e1e1e;display:flex;justify-content:space-around;padding:8px 0;border-top:1px solid #333;z-index:1000;}
+    .bottom-nav a {text-align:center;color:#aaa;text-decoration:none;font-size:14px;flex:1;}
+    .bottom-nav a i {font-size:22px;display:block;margin-bottom:5px;}
+    .bottom-nav a.active {color:#9b59b6;}
+    .category-popup {position:fixed;bottom:-100%;left:0;width:100%;background:#1e1e1e;border-top-left-radius:20px;border-top-right-radius:20px;box-shadow:0 -4px 20px rgba(0,0,0,0.7);flex-direction:column;z-index:2000;max-height:70%;overflow-y:auto;transition:0.4s ease-in-out;}
+    .category-popup.active {bottom:0;}
+    .popup-header {display:flex;justify-content:space-between;align-items:center;padding:15px;border-bottom:1px solid #333;}
+    .popup-header h2 {margin:0;font-size:18px;font-weight:bold;}
+    .popup-header i {cursor:pointer;font-size:20px;}
+    .popup-grid {display:grid;grid-template-columns:repeat(2,1fr);gap:15px;padding:15px;}
+    .popup-item {background:#2b2b2b;padding:15px;border-radius:15px;text-align:left;display:flex;align-items:center;gap:10px;cursor:pointer;transition:0.3s;}
+    .popup-item:hover {background:#3a3a3a;}
+    .popup-item i {font-size:22px;color:#9b59b6;}
+    .popup-item div {display:flex;flex-direction:column;}
+    .popup-item strong {font-size:15px;color:#fff;}
+    .popup-item span {font-size:13px;color:#aaa;}
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <div class="navbar">
+    <div class="left">
+      <i class="fas fa-bars"></i>
+      <div class="title">Sportzfy HD</div>
+    </div>
+    <div class="right">
+      <i class="fas fa-heart"></i>
+      <i class="fas fa-rotate-right"></i>
+      <i class="fas fa-search"></i>
+    </div>
+  </div>
+
+  <!-- Live Box -->
+  <div class="live-box">
+    <div id="player"></div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs-wrapper">
+    <button class="tabs-fixed tab-btn active" data-filter="All">All</button>
+    <div class="tabs-scroll">
+      <button class="tab-btn" data-filter="Sports">Sports</button>
+      <button class="tab-btn" data-filter="Movies">Movies</button>
+      <button class="tab-btn" data-filter="News">News</button>
+      <button class="tab-btn" data-filter="Indian">Indian</button>
+      <button class="tab-btn" data-filter="Cartoon">Cartoon</button>
+    </div>
+  </div>
+
+
+  <!-- Bottom Nav -->
+  <div class="bottom-nav">
+    <a href="#" class="active"><i class="fas fa-baseball-ball"></i>Sports</a>
+    <a href="#"><i class="fas fa-broadcast-tower"></i>Live Events</a>
+    <a href="#" id="openCategory"><i class="fas fa-tv"></i>Categories</a>
+  </div>
+
+  <!-- Category Popup -->
+  <div class="category-popup" id="categoryPopup">
+    <div class="popup-header">
+      <h2>Select Category</h2>
+      <i class="fas fa-times" id="closePopup"></i>
+    </div>
+    <div class="popup-grid" id="popupGrid"></div>
+  </div>
+<!-- Scrollable Channel Grid -->
+  <div class="channel-container">
+    <div class="channel-grid">
+      <!-- Example Channels -->
+      <div class="channel" data-src="http://172.16.29.3:8090/hls/tsportshd.m3u8" data-category="Sports">
+        <div class="channel-card">
+          <img src="https://i.postimg.cc/ZqFc3v81/images-8.jpg" class="channel-logo">
+          <div class="channel-name">T Sports</div>
+        </div>
+      </div>
+<div class="channel" data-src="http://172.16.29.3:8090/hls/tntsports2hd.m3u8" data-category="Sports">
+        <div class="channel-card">
+          <img src="https://i.postimg.cc/7LwDGvJX/images.jpg" class="channel-logo">
+          <div class="channel-name">TNT Sports2</div>
+        </div>
+      </div>
+<div class="channel" data-src="http://172.16.29.3:8090/hls/tntsports1hd.m3u8" data-category="Sports">
+        <div class="channel-card">
+          <img src="https://i.postimg.cc/7LwDGvJX/images.jpg" class="channel-logo">
+          <div class="channel-name">TNT Sports1</div>
+        </div>
+      </div>
+      <div class="channel" data-src="http://172.16.29.3:8090/hls/SonyTen1hd.m3u8" data-category="Sports">
+        <div class="channel-card">
+          <img src="https://i.postimg.cc/QCVHR6Pw/20250529-122631.png" class="channel-logo">
+          <div class="channel-name">Sports 1</div>
+        </div>
+      </div>
+      <div class="channel" data-src="http://172.16.29.3:8090/hls/SonyTen2hd.m3u8" data-category="Sports">
+        <div class="channel-card">
+          <img src="https://i.postimg.cc/WzKhjGc3/20250529-122855.png" class="channel-logo">
+          <div class="channel-name">Sports 2</div>
+        </div>
+      </div>
+<div class="channel" data-src="http://172.16.29.3:8090/hls/SonyTen3hd.m3u8" data-category="Sports">
+        <div class="channel-card">
+          <img src="https://i.postimg.cc/WzKhjGc3/20250529-122855.png" class="channel-logo">
+          <div class="channel-name">Sports 3</div>
+        </div>
+      </div>
+<div class="channel" data-src="http://172.16.29.3:8090/hls/SonyTen5HD.m3u8" data-category="Sports">
+        <div class="channel-card">
+          <img src="https://i.postimg.cc/WzKhjGc3/20250529-122855.png" class="channel-logo">
+          <div class="channel-name">Sports 5</div>
+        </div>
+      </div>
+      <div class="channel" data-src="https://app.hughag.store/api/6b9c461155/playlist.m3u8" data-category="Sports">
+        <div class="channel-card">
+          <img src="https://i.postimg.cc/YqKcs8sP/20250529-123315.png" class="channel-logo">
+          <div class="channel-name">Ten Cricket</div>
+        </div>
+      </div>
+      <div class="channel" data-src="https://cineplexbd.net/movie/FTP/Indian%20Bangla/2025//Taandob%20(2025)/Taandob%20(2025).mp4" data-category="Movies">
+        <div class="channel-card">
+          <img src="https://i.postimg.cc/fWvDdCX0/images-13.jpg" class="channel-logo">
+          <div class="channel-name">Tandoob</div>
+        </div>
+      </div>
+<div class="channel" data-src="https://cineplexbd.net/movie/FTP/Bangla%20Dubbed/2023/Hello%20Guru%20Prema%20Kosame%202023%20(1080p)/Hello%20Guru%20Prema%20Kosame%202023%20(1080p).mp4" data-category="Movies">
+        <div class="channel-card">
+          <img src="https://i.postimg.cc/FK0Pz7rN/poster.jpg" class="channel-logo">
+          <div class="channel-name">Prem Korechi</div>
+        </div>
+      </div>
+<div class="channel" data-src="https://cineplexbd.net/movie/FTP/Bangla%20Dubbed/2021//KGF%20(2021)/KGF%202021.mp4" data-category="Movies">
+        <div class="channel-card">
+          <img src="https://i.postimg.cc/598FrLPx/images.jpg" class="channel-logo">
+          <div class="channel-name">KGF</div>
+        </div>
+      </div>
+<div class="channel" data-src="https://cineplexbd.net/movie/FTP/Indian%20Bangla/2025/Borbaadd%20(2025)%20720p/Borbaad%20(2025).mp4" data-category="Movies">
+        <div class="channel-card">
+          <img src="https://i.postimg.cc/Bbbkj47p/images-1.jpg" class="channel-logo">
+          <div class="channel-name">Borbad</div>
+        </div>
+      </div>
+<div class="channel" data-src="https://cineplexbd.net/movie/FTP/Indian%20Bangla/2025/Daagi%20(2025)%20720p/Daagi.mp4" data-category="Movies">
+        <div class="channel-card">
+          <img src="https://i.postimg.cc/NfYbCgkz/images-2.jpg" class="channel-logo">
+          <div class="channel-name">Daagi</div>
+        </div>
+      </div>
+<div class="channel" data-src="https://cineplexbd.net/movie/FTP/Indian%20Bangla/2024//Toofan%20(2024)/Toofan%20(2024)%20.mp4" data-category="Movies">
+        <div class="channel-card">
+          <img src="https://i.postimg.cc/NjKXpVSn/images-3.jpg" class="channel-logo">
+          <div class="channel-name">Toofan</div>
+        </div>
+      </div>
+<div class="channel" data-src="https://cineplexbd.net/movie/FTP/Bangla%20Dubbed/2025/Dhanush%202025%201080/Dhanush%202025%20(1080p).mp4" data-category="Movies">
+        <div class="channel-card">
+          <img src="https://i.postimg.cc/zDsw69M9/Poster.jpg" class="channel-logo">
+          <div class="channel-name">Dhanush</div>
+        </div>
+      </div>
+<div class="channel" data-src="https://cineplexbd.net/movie/FTP/Indian%20Bangla/2023/Priyotoma%20(2023)%201080p/%E0%A6%AA%E0%A7%8D%E0%A6%B0%E0%A6%BF%E0%A7%9F%E0%A6%A4%E0" data-category="Movies">
+        <div class="channel-card">
+          <img src="https://i.postimg.cc/Dz8KWQWL/250px-Priyotoma.jpg" class="channel-logo">
+          <div class="channel-name">Piyotoma</div>
+        </div>
+      </div>
+<div class="channel" data-src="https://cineplexbd.net/movie/FTP/Bangla%20Dubbed/2025/Tiger%20Full%20Movie%202025/Tiger%20Full%20Movie%202025.mp4" data-category="Movies">
+        <div class="channel-card">
+          <img src="https://i.postimg.cc/brWkC8wh/Poster-1.jpg" class="channel-logo">
+          <div class="channel-name">Tiger</div>
+        </div>
+      </div>
+
+      <div class="channel" data-src="https://owrcovcrpy.gpcdn.net/bpk-tv/1702/output/1702.m3u8" data-category="News">
+        <div class="channel-card">
+          <img src="https://i.postimg.cc/ZYCw4JrB/20250529-071147.png" class="channel-logo">
+          <div class="channel-name">Somoi Tv</div>
+        </div>
+      </div>
+      <div class="channel" data-src="https://owrcovcrpy.gpcdn.net/bpk-tv/1701/output/1701.m3u8" data-category="News">
+        <div class="channel-card">
+          <img src="https://i.postimg.cc/cJxcjWxJ/20250529-071035.png" class="channel-logo">
+          <div class="channel-name">Jamuna Tv</div>
+        </div>
+      </div>
+      <div class="channel" data-src="https://owrcovcrpy.gpcdn.net/bpk-tv/1705/output/1705.m3u8" data-category="News">
+        <div class="channel-card">
+          <img src="https://i.postimg.cc/fb8vQPyf/20250529-071258.png" class="channel-logo">
+          <div class="channel-name">Ekattor Tv</div>
+        </div>
+      </div>
+      <div class="channel" data-src="https://owrcovcrpy.gpcdn.net/bpk-tv/1704/output/1704.m3u8" data-category="News">
+        <div class="channel-card">
+          <img src="https://i.postimg.cc/prFQ8XZs/20250529-071659.png" class="channel-logo">
+          <div class="channel-name">Independent</div>
+        </div>
+      </div>
+      <div class="channel" data-src="https://owrcovcrpy.gpcdn.net/bpk-tv/1709/output/1709.m3u8" data-category="News">
+        <div class="channel-card">
+          <img src="https://i.postimg.cc/bNdrmBfj/20250529-071604.png" class="channel-logo">
+          <div class="channel-name">Btv</div>
+        </div>
+      </div>
+      <div class="channel" data-src="https://owrcovcrpy.gpcdn.net/bpk-tv/1703/output/1703.m3u8" data-category="News">
+        <div class="channel-card">
+          <img src="https://i.postimg.cc/x13d8DKM/daf4f96896f6.png" class="channel-logo">
+          <div class="channel-name">Channel 24</div>
+        </div>
+      </div>
+      <div class="channel" data-src="https://owrcovcrpy.gpcdn.net/bpk-tv/1706/output/1706.m3u8" data-category="News">
+        <div class="channel-card">
+          <img src="https://i.postimg.cc/gc3bmyy6/20250529-102724.png" class="channel-logo">
+          <div class="channel-name">ATN</div>
+        </div>
+      </div>
+      <div class="channel" data-src="https://owrcovcrpy.gpcdn.net/bpk-tv/1722/output/1722.m3u8" data-category="News">
+        <div class="channel-card">
+          <img src="https://i.postimg.cc/sDydXBKH/20250529-102502.png" class="channel-logo">
+          <div class="channel-name">ATN Bangla</div>
+        </div>
+      </div>
+      <div class="channel" data-src="https://owrcovcrpy.gpcdn.net/bpk-tv/1711/output/1711.m3u8" data-category="News">
+        <div class="channel-card">
+          <img src="https://i.postimg.cc/Dwy9rt9q/20250529-103607.png" class="channel-logo">
+          <div class="channel-name">Dipto Tv</div>
+        </div>
+      </div>
+      <div class="channel" data-src="https://owrcovcrpy.gpcdn.net/bpk-tv/1716/output/1716.m3u8" data-category="News">
+        <div class="channel-card">
+          <img src="https://i.postimg.cc/FFy82rmy/20250529-072107.png" class="channel-logo">
+          <div class="channel-name">Ntv</div>
+        </div>
+      </div>
+      <div class="channel" data-src="https://owrcovcrpy.gpcdn.net/bpk-tv/1723/output/1723-audio_113532_eng=113200-video=1692000.m3u8" data-category="News">
+        <div class="channel-card">
+          <img src="https://i.postimg.cc/MGng41KH/20250529-101717.png" class="channel-logo">
+          <div class="channel-name">Channel i</div>
+        </div>
+      </div>
+      <div class="channel" data-src="https://owrcovcrpy.gpcdn.net/bpk-tv/1715/output/1715.m3u8" data-category="News">
+        <div class="channel-card">
+          <img src="https://i.postimg.cc/NFknT4bJ/20250529-072833.png" class="channel-logo">
+          <div class="channel-name">Bangla V</div>
+        </div>
+      </div>
+      <div class="channel" data-src="https://app.hughag.store/api/81d038ac44/playlist.m3u8" data-category="Indian">
+        <div class="channel-card">
+          <img src="https://i.postimg.cc/Xqtgry6H/1000578197-jpg.jpg" class="channel-logo">
+          <div class="channel-name">Zee Bangla</div>
+        </div>
+      </div>
+<div class="channel" data-src="http://172.16.29.3:8090/hls/StarJalshaHD.m3u8" data-category="Indian">
+        <div class="channel-card">
+          <img src="https://i.postimg.cc/hGTrYwCF/Star-Jalsha-logo-2023.png" class="channel-logo">
+          <div class="channel-name">Star Jolsa</div>
+        </div>
+      </div>
+      <div class="channel" data-src="https://live.dinesh29.com.np/stream/jiotv/colorsbengalihd/master.m3u8" data-category="Indian">
+        <div class="channel-card">
+          <img src="https://i.postimg.cc/hGMb9Yq7/20250602-220804.png" class="channel-logo">
+          <div class="channel-name">Colors B</div>
+        </div>
+      </div>
+      <div class="channel" data-src="https://live-bangla.akamaized.net/liveabr/pub-iobanglakp3sff/live_720p/chunks.m3u8" data-category="Indian">
+        <div class="channel-card">
+          <img src="https://i.postimg.cc/9Mndkq0m/20250529-111624.png" class="channel-logo">
+          <div class="channel-name">Enter 10</div>
+        </div>
+      </div>
+      <div class="channel" data-src="http://172.16.29.3:8090/hls/SonyAtth.m3u8" data-category="Indian">
+        <div class="channel-card">
+          <img src="https://i.postimg.cc/c4YzQdkg/20250529-111438.png" class="channel-logo">
+          <div class="channel-name">SonyArt</div>
+        </div>
+      </div>
+      <div class="channel" data-src="https://app.hughag.store/api/04cb8cb9a7/playlist.m3u8" data-category="Indian">
+        <div class="channel-card">
+          <img src="https://i.postimg.cc/YCtw042q/1000578199-jpg.jpg" class="channel-logo">
+          <div class="channel-name">Zee Bangla</div>
+        </div>
+      </div>
+  <div class="channel" data-src="https://app.hughag.store/api/81d038ac44/playlist.m3u8" data-category="Ind">
+        <div class="channel-card">
+          <img src="https://i.postimg.cc/Xqtgry6H/1000578197-jpg.jpg" class="channel-logo">
+          <div class="channel-name">Zee Bangla</div>
+        </div>
+      </div>
+      <div class="channel" data-src="https://server.zillarbarta.com/zbcatun/video.m3u8" data-category="Cartoon">
+        <div class="channel-card">
+          <img src="https://i.postimg.cc/7YzfSkby/images-1.jpg" class="channel-logo">
+          <div class="channel-name">Cartoon</div>
+        </div>
+      </div>
+<script>
+  // JW Player init
+  var playerInstance = jwplayer("player").setup({
+    file: "https://app.hughag.store/api/6b9c461155/playlist.m3u8", // default stream
+    width: "100%",
+    height: "100%",
+    autostart: true,
+    controls: true
+  });
+
+  const channels = document.querySelectorAll('.channel');
+  const tabs = document.querySelectorAll('.tab-btn');
+  const popup = document.getElementById('categoryPopup');
+  const popupGrid = document.getElementById('popupGrid');
+  const openCategory = document.getElementById('openCategory');
+  const closePopup = document.getElementById('closePopup');
+
+  // ✅ Play function (with fullscreen + rotate)
+  function playStream(url) {
+    playerInstance.load([{ file: url }]);
+    playerInstance.play();
+
+    // fullscreen এ নেওয়া
+    playerInstance.setFullscreen(true);
+
+    // auto landscape lock (mobile এ)
+    if (screen.orientation && screen.orientation.lock) {
+      screen.orientation.lock("landscape").catch(err => console.log(err));
+    }
+  }
+
+  // Load first channel
+  playStream(channels[0].getAttribute('data-src'));
+
+  // Channel click
+  channels.forEach(channel => {
+    channel.addEventListener('click', () => {
+      playStream(channel.getAttribute('data-src'));
+    });
+  });
+
+  // Category counts
+  function updateCategoryCounts() {
+    const categories = {};
+    channels.forEach(ch => {
+      const cat = ch.getAttribute('data-category');
+      categories[cat] = (categories[cat] || 0) + 1;
+    });
+    const allCount = channels.length;
+    document.querySelector('.tabs-fixed').innerText = `All (${allCount})`;
+    tabs.forEach(tab => {
+      const filter = tab.getAttribute('data-filter');
+      if (filter !== "All") {
+        tab.innerText = `${filter} (${categories[filter] || 0})`;
+      }
+    });
+    popupGrid.innerHTML = "";
+    const allItem = document.createElement("div");
+    allItem.className = "popup-item";
+    allItem.innerHTML = `<i class="fas fa-layer-group"></i><div><strong>All</strong><span>${allCount} channels</span></div>`;
+    allItem.addEventListener("click",()=>filterCategory("All"));
+    popupGrid.appendChild(allItem);
+    for (const [cat,count] of Object.entries(categories)) {
+      const item = document.createElement("div");
+      item.className="popup-item";
+      item.innerHTML=`<i class="fas fa-layer-group"></i><div><strong>${cat}</strong><span>${count} channels</span></div>`;
+      item.addEventListener("click",()=>filterCategory(cat));
+      popupGrid.appendChild(item);
+    }
+  }
+  updateCategoryCounts();
+
+  function filterCategory(filter) {
+    tabs.forEach(t => {
+      if (t.getAttribute("data-filter") === filter) {
+        t.classList.add("active");
+      } else {
+        t.classList.remove("active");
+      }
+    });
+    channels.forEach(channel => {
+      if (filter === "All" || channel.getAttribute('data-category') === filter) {
+        channel.style.display = "block";
+      } else {
+        channel.style.display = "none";
+      }
+    });
+    popup.classList.remove('active');
+  }
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      const filter = tab.getAttribute('data-filter');
+      filterCategory(filter);
+    });
+  });
+
+  openCategory.addEventListener('click',()=>popup.classList.add('active'));
+  closePopup.addEventListener('click',()=>popup.classList.remove('active'));
+</script>
