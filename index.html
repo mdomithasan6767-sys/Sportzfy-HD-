@@ -2,7 +2,6 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <!-- এখানে viewport-fit=cover যুক্ত করা হয়েছে যা ক্যামেরার কালো অংশ সরিয়ে পুরো স্ক্রিন ব্যবহার করবে -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <title>Sportzfy TV - লাইভ স্পোর্টস ও টিভি</title>
     
@@ -68,14 +67,33 @@
             border-color: var(--primary);
             background: rgba(255, 255, 255, 0.1);
         }
+        /* গোলাকার লোগোর জন্য স্টাইল */
         .sports-circle {
             width: 75px; height: 75px;
             border-radius: 50%;
             border: 2px solid var(--primary);
-            background: white; padding: 5px;
+            background: #1e293b; /* ডার্ক ব্যাকগ্রাউন্ড */
+            padding: 5px;
             display: flex; align-items: center; justify-content: center; margin: 0 auto;
+            overflow: hidden; /* ছবি বৃত্তের বাইরে যাবে না */
         }
-        .sports-circle img { width: 85%; height: 85%; object-fit: contain; }
+        .sports-circle img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; /* ছবি পুরো বৃত্ত জুড়ে কভার করবে */
+            border-radius: 50%; /* ছবিকেও গোলাকার করে */
+        }
+        
+        /* চ্যানেল লিস্টের লোগো গোলাকার করার জন্য */
+        .channel-logo {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: white;
+            padding: 4px;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+        }
         
         .cat-item {
             background: rgba(255, 255, 255, 0.05);
@@ -110,6 +128,15 @@
             display: inline-block;
             box-shadow: 0 0 8px #ff4d4d;
             animation: pulse 1.5s infinite;
+        }
+        /* ইভেন্টের লোগো গোলাকার করার জন্য */
+        .event-logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #1e293b;
+            padding: 2px;
         }
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
         .bd-time {
@@ -176,7 +203,79 @@
             backdrop-filter: blur(3px);
         }
         
-        /* সম্পূর্ণ ডিসপ্লে জুড়েই ১০০% নো-বর্ডার ফুল স্ক্রিন মোড (ক্যামেরার এলাকা সহ) */
+        /* লোডিং স্ক্রিন স্টাইল */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0f172a;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        .loading-screen.hide {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .loader-logo {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
+            border-radius: 50%; /* লোডিং লোগো গোলাকার */
+            background: linear-gradient(135deg, #00ff8844, #00ff8822);
+            animation: pulseGlow 1.5s infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            padding: 10px;
+        }
+        .loader-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 0 0 #00ff8844; }
+            70% { box-shadow: 0 0 0 20px #00ff8800; }
+            100% { box-shadow: 0 0 0 0 #00ff8800; }
+        }
+        .loader-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(0, 255, 136, 0.3);
+            border-top: 3px solid #00ff88;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .loader-name {
+            font-size: 28px;
+            font-weight: bold;
+            text-align: center;
+            background: linear-gradient(135deg, #00ff88, #00cc66);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-top: 15px;
+        }
+        .loader-tagline {
+            text-align: center;
+            color: #94a3b8;
+            font-size: 14px;
+            margin-top: 8px;
+        }
+        
+        /* সম্পূর্ণ ডিসপ্লে জুড়েই ১০০% নো-বর্ডার ফুল স্ক্রিন মোড */
         .video-modal {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -206,7 +305,6 @@
             overflow: hidden !important;
         }
         
-        /* ব্যাক বাটন স্টাইল */
         .player-back-icon {
             position: absolute;
             top: 15px;
@@ -233,7 +331,6 @@
             margin: 0 !important; padding: 0 !important;
         }
 
-        /* ক্যামেরার দিক ও চারপাশের সকল ফাঁকা জায়গা জোরপূর্বক বন্ধ করার জন্য সিএসএস */
         #jwPlayerContainer video {
             object-fit: fill !important;
             width: 100% !important;
@@ -242,7 +339,6 @@
             padding: 0 !important;
         }
         
-        /* Telegram popup styles */
         .telegram-popup-overlay {
             position: fixed;
             bottom: 0;
@@ -265,9 +361,38 @@
         .cursor-pointer {
             cursor: pointer;
         }
+        
+        /* মূল কন্টেন্ট শুরুতে লুকানো */
+        #mainAppContent {
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        #mainAppContent.visible {
+            opacity: 1;
+        }
+        
+        /* ডিফল্ট লোগো ব্যবহারের জন্য হেলপার */
+        .default-logo {
+            background-color: #1e293b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
     </style>
 </head>
-<body class="pb-20">
+<body>
+
+    <!-- লোডিং স্ক্রিন -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="text-center">
+            <div class="loader-logo">
+                <img id="loadingLogo" src="https://i.postimg.cc/yYvM1dRS/20260610-235713.png" alt="Logo">
+            </div>
+            <div class="loader-spinner"></div>
+            <div id="loadingAppName" class="loader-name">Sportzfy TV</div>
+            <div id="loadingTagline" class="loader-tagline">লাইভ স্পোর্টস স্ট্রিমিং</div>
+        </div>
+    </div>
 
     <div id="drawerOverlay" onclick="toggleDrawer()"></div>
 
@@ -292,7 +417,7 @@
         </div>
     </div>
 
-    <!-- Video Player Modal with JW Player -->
+    <!-- Video Player Modal -->
     <div id="videoPlayerModal" class="video-modal">
         <div class="video-modal-content" id="modalContentBlock">
             <div class="player-back-icon" onclick="closeVideoPlayer()">
@@ -302,35 +427,38 @@
         </div>
     </div>
 
-    <!-- হেডার -->
-    <header class="sticky top-0 z-50 glass m-2 p-4 flex justify-between items-center">
-        <div class="flex items-center gap-3">
-            <button onclick="toggleDrawer()" class="text-2xl"><i class="fa-solid fa-bars-staggered"></i></button>
-            <h1 class="text-xl font-bold tracking-tighter text-emerald-400">Sportzfy TV</h1>
-        </div>
-        <div class="flex gap-4 items-center">
-            <button onclick="toggleSearch()" class="text-xl"><i class="fa-solid fa-magnifying-glass"></i></button>
-            <div class="relative">
-                <i class="fa-solid fa-bell text-xl"></i>
+    <!-- মূল অ্যাপ্লিকেশন কন্টেন্ট -->
+    <div id="mainAppContent">
+        <!-- হেডার -->
+        <header class="sticky top-0 z-50 glass m-2 p-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <button onclick="toggleDrawer()" class="text-2xl"><i class="fa-solid fa-bars-staggered"></i></button>
+                <h1 id="appHeaderTitle" class="text-xl font-bold tracking-tighter text-emerald-400">Sportzfy TV</h1>
             </div>
+            <div class="flex gap-4 items-center">
+                <button onclick="toggleSearch()" class="text-xl"><i class="fa-solid fa-magnifying-glass"></i></button>
+                <div class="relative">
+                    <i class="fa-solid fa-bell text-xl"></i>
+                </div>
+            </div>
+        </header>
+
+        <!-- Notice Section -->
+        <div class="mx-2 mb-4 overflow-hidden glass p-2 text-sm bg-emerald-900/20 text-emerald-300">  
+            <div class="scrolling-text" id="noticeText">লোড হচ্ছে...</div>  
         </div>
-    </header>
 
-    <!-- Notice Section -->
-    <div class="mx-2 mb-4 overflow-hidden glass p-2 text-sm bg-emerald-900/20 text-emerald-300">  
-        <div class="scrolling-text" id="noticeText">লোড হচ্ছে...</div>  
-    </div>
+        <div id="searchBar" class="hidden px-4 mb-4">
+            <input type="text" id="searchInput" onkeyup="searchChannels()" placeholder="🔍 চ্যানেল খুঁজুন..." class="w-full p-3 rounded-xl bg-slate-800 border border-emerald-500/30 focus:outline-none focus:border-emerald-500 text-white">
+        </div>
 
-    <div id="searchBar" class="hidden px-4 mb-4">
-        <input type="text" id="searchInput" onkeyup="searchChannels()" placeholder="🔍 চ্যানেল খুঁজুন..." class="w-full p-3 rounded-xl bg-slate-800 border border-emerald-500/30 focus:outline-none focus:border-emerald-500 text-white">
-    </div>
+        <!-- Dynamic Category Navigation -->
+        <div id="topCategoryNav" class="flex overflow-x-auto gap-3 px-4 mb-6 no-scrollbar"></div>
 
-    <!-- Dynamic Category Navigation -->
-    <div id="topCategoryNav" class="flex overflow-x-auto gap-3 px-4 mb-6 no-scrollbar"></div>
-
-    <div id="mainContent" class="px-4">
-        <div id="eventContainer"></div>
-        <div id="channelGrid" class="channel-grid"></div>
+        <div id="mainContent" class="px-4">
+            <div id="eventContainer"></div>
+            <div id="channelGrid" class="channel-grid"></div>
+        </div>
     </div>
 
     <!-- Drawer Menu -->
@@ -365,123 +493,16 @@
     </nav>
 
     <script>
-        // ======================== JW Player with Fullscreen Stretching ========================
+        // ডিফল্ট লোগো URL (আপনার দেওয়া ছবি)
+        const DEFAULT_LOGO_URL = "https://i.postimg.cc/yYvM1dRS/20260610-235713.png";
+        
+        // JW Player Key
         jwplayer.key = "uoW6qHjBL3KNudxKVnwa3rt5LlTakbko9e6aQ6VUyKQ=";
         
         let currentJWPlayer = null;
+        let isPlayerActive = false;
         
-        function openPlayerWithJW(url, title = '') {
-            if (!url) return;
-            
-            const modal = document.getElementById('videoPlayerModal');
-            const container = document.getElementById('jwPlayerContainer');
-            const modalContent = document.getElementById('modalContentBlock');
-            
-            if (currentJWPlayer) {
-                try { currentJWPlayer.destroy(); } catch(e) {}
-                currentJWPlayer = null;
-            }
-            
-            container.innerHTML = '<div id="jwplayer"></div>';
-            
-            // stretching: "exact" সেট করা হয়েছে যেন ভিডিও পুরো ডিসপ্লে জুড়ে ফিট হয়
-            currentJWPlayer = jwplayer('jwplayer').setup({
-                file: url,
-                width: '100%',
-                height: '100%',
-                autostart: true,
-                controls: true,
-                stretching: "exact", 
-                abouttext: '',
-                aboutlink: '',
-                hlsjsConfig: {
-                    enableWorker: true,
-                    lowLatencyMode: true,
-                    p2pConfig: {
-                        live: true,
-                        logLevel: false,
-                    }
-                },
-            });
-            
-            modal.classList.add('active');
-            
-            // ব্রাউজার বা অ্যাপে ফুলস্ক্রিন রিকোয়েস্ট করা
-            if (modalContent.requestFullscreen) {
-                modalContent.requestFullscreen();
-            } else if (modalContent.webkitRequestFullscreen) {
-                modalContent.webkitRequestFullscreen();
-            } else if (modalContent.mozRequestFullScreen) {
-                modalContent.mozRequestFullScreen();
-            } else if (modalContent.msRequestFullscreen) {
-                modalContent.msRequestFullscreen();
-            }
-
-            // স্ক্রিন ল্যান্ডস্কেপ মোডে লক করা
-            try {
-                if (screen.orientation && screen.orientation.lock) {
-                    screen.orientation.lock('landscape').catch(e => console.log("Orientation lock not supported"));
-                }
-            } catch(e) {}
-            
-            // ক্যামেরার দিকসহ সকল বর্ডার দূর করতে ইনস্ট্যান্টলি ভিডিও ট্যাগের সিএসএস পরিবর্তন করা
-            setTimeout(() => {
-                const vNode = container.querySelector('video');
-                if(vNode) {
-                    vNode.style.setProperty('object-fit', 'fill', 'important');
-                    vNode.style.setProperty('width', '100%', 'important');
-                    vNode.style.setProperty('height', '100%', 'important');
-                }
-            }, 300);
-
-            pushUIState('player');
-        }
-        
-        function closeVideoPlayer() {
-            const modal = document.getElementById('videoPlayerModal');
-            if (currentJWPlayer) {
-                try { currentJWPlayer.destroy(); } catch(e) {}
-                currentJWPlayer = null;
-            }
-            
-            if (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement) {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                } else if (document.webkitExitFullscreen) {
-                    document.webkitExitFullscreen();
-                } else if (document.mozCancelFullScreen) {
-                    document.mozCancelFullScreen();
-                } else if (document.msExitFullscreen) {
-                    document.msExitFullscreen();
-                }
-            }
-
-            try {
-                if (screen.orientation && screen.orientation.unlock) {
-                    screen.orientation.unlock();
-                }
-            } catch(e) {}
-
-            if (modal.classList.contains('active')) {
-                modal.classList.remove('active');
-            }
-        }
-        
-        // ফুলস্ক্রিন চেঞ্জ ট্র্যাকিং
-        const onFSChange = () => {
-            if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement) {
-                const modal = document.getElementById('videoPlayerModal');
-                if (modal && modal.classList.contains('active')) {
-                    closeVideoPlayer();
-                }
-            }
-        };
-        document.addEventListener('fullscreenchange', onFSChange);
-        document.addEventListener('webkitfullscreenchange', onFSChange);
-        document.addEventListener('mozfullscreenchange', onFSChange);
-
-        // ======================== Sportzfy TV Logic ========================
-        
+        // Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyAFBTPu9kk46xj8QWTdl-WaBZHDKjxCOzU",
             authDomain: "sportzfy-tv-5ab8d.firebaseapp.com",
@@ -499,6 +520,7 @@
         const noticeRef = database.ref('notice');
         const categoriesRef = database.ref('categories');
         const telegramSettingsRef = database.ref('telegramSettings');
+        const loadingSettingsRef = database.ref('loadingSettings');
 
         let channels = [];
         let liveEvents = [];
@@ -524,6 +546,154 @@
             }
             return TEST_STREAMS[0];
         }
+        
+        // লোগো ভ্যালিডেট করার ফাংশন (খালি বা ভুল থাকলে ডিফল্ট দেবে)
+        function getValidLogoUrl(logoUrl) {
+            if (logoUrl && logoUrl.startsWith('http') && (logoUrl.includes('.png') || logoUrl.includes('.jpg') || logoUrl.includes('.jpeg') || logoUrl.includes('.gif') || logoUrl.includes('.svg') || logoUrl.includes('flagcdn'))) {
+                return logoUrl;
+            }
+            return DEFAULT_LOGO_URL;
+        }
+
+        // প্লেয়ার সম্পূর্ণরূপে ডেস্ট্রয় ও অডিও বন্ধ করার ফাংশন
+        function destroyPlayerCompletely() {
+            if (currentJWPlayer) {
+                try {
+                    currentJWPlayer.pause(true);
+                    currentJWPlayer.setMute(true);
+                    currentJWPlayer.destroy();
+                } catch(e) {
+                    console.log("Player destroy error:", e);
+                }
+                currentJWPlayer = null;
+            }
+            
+            const container = document.getElementById('jwPlayerContainer');
+            if (container) {
+                const videos = container.querySelectorAll('video');
+                videos.forEach(video => {
+                    video.pause();
+                    video.src = '';
+                    video.load();
+                    video.remove();
+                });
+                container.innerHTML = '';
+            }
+            
+            isPlayerActive = false;
+        }
+
+        function openPlayerWithJW(url, title = '') {
+            if (!url) return;
+            
+            destroyPlayerCompletely();
+            
+            const modal = document.getElementById('videoPlayerModal');
+            const container = document.getElementById('jwPlayerContainer');
+            const modalContent = document.getElementById('modalContentBlock');
+            
+            container.innerHTML = '<div id="jwplayer"></div>';
+            
+            currentJWPlayer = jwplayer('jwplayer').setup({
+                file: url,
+                width: '100%',
+                height: '100%',
+                autostart: true,
+                controls: true,
+                stretching: "exact", 
+                abouttext: '',
+                aboutlink: '',
+                mute: false,
+                hlsjsConfig: {
+                    enableWorker: true,
+                    lowLatencyMode: true,
+                    p2pConfig: {
+                        live: true,
+                        logLevel: false,
+                    }
+                },
+            });
+            
+            currentJWPlayer.on('ready', function() {
+                currentJWPlayer.setMute(false);
+                currentJWPlayer.play();
+            });
+            
+            modal.classList.add('active');
+            isPlayerActive = true;
+            
+            if (modalContent.requestFullscreen) {
+                modalContent.requestFullscreen();
+            } else if (modalContent.webkitRequestFullscreen) {
+                modalContent.webkitRequestFullscreen();
+            } else if (modalContent.mozRequestFullScreen) {
+                modalContent.mozRequestFullScreen();
+            } else if (modalContent.msRequestFullscreen) {
+                modalContent.msRequestFullscreen();
+            }
+
+            try {
+                if (screen.orientation && screen.orientation.lock) {
+                    screen.orientation.lock('landscape').catch(e => console.log("Orientation lock not supported"));
+                }
+            } catch(e) {}
+
+            pushUIState('player');
+        }
+        
+        function closeVideoPlayer() {
+            const modal = document.getElementById('videoPlayerModal');
+            
+            destroyPlayerCompletely();
+            
+            if (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement) {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if (document.mozCancelFullScreen) {
+                    document.mozCancelFullScreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                }
+            }
+
+            try {
+                if (screen.orientation && screen.orientation.unlock) {
+                    screen.orientation.unlock();
+                }
+            } catch(e) {}
+
+            if (modal && modal.classList.contains('active')) {
+                modal.classList.remove('active');
+            }
+            
+            isPlayerActive = false;
+        }
+        
+        const onFSChange = () => {
+            if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement) {
+                const modal = document.getElementById('videoPlayerModal');
+                if (modal && modal.classList.contains('active')) {
+                    closeVideoPlayer();
+                }
+            }
+        };
+        document.addEventListener('fullscreenchange', onFSChange);
+        document.addEventListener('webkitfullscreenchange', onFSChange);
+        document.addEventListener('mozfullscreenchange', onFSChange);
+        
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden && isPlayerActive && currentJWPlayer) {
+                try {
+                    currentJWPlayer.pause(true);
+                } catch(e) {}
+            } else if (!document.hidden && isPlayerActive && currentJWPlayer) {
+                try {
+                    currentJWPlayer.play();
+                } catch(e) {}
+            }
+        });
 
         function openPlayer(item, isEvent = false) {
             if (!item) return;
@@ -565,6 +735,49 @@
             uiStateStack = [];
         });
 
+        function loadLoadingSettings() {
+            loadingSettingsRef.on('value', (snapshot) => {
+                const settings = snapshot.val();
+                if (settings) {
+                    if (settings.logoUrl) {
+                        document.getElementById('loadingLogo').src = getValidLogoUrl(settings.logoUrl);
+                    }
+                    if (settings.appName) {
+                        document.getElementById('loadingAppName').innerText = settings.appName;
+                        document.getElementById('appHeaderTitle').innerText = settings.appName;
+                        document.title = settings.appName + " - লাইভ স্পোর্টস ও টিভি";
+                    }
+                    if (settings.tagline) {
+                        document.getElementById('loadingTagline').innerText = settings.tagline;
+                    }
+                } else {
+                    // ডিফল্ট সেটিংস তৈরি
+                    const defaultSettings = {
+                        logoUrl: DEFAULT_LOGO_URL,
+                        appName: "Sportzfy TV",
+                        tagline: "লাইভ স্পোর্টস স্ট্রিমিং",
+                        updatedAt: Date.now()
+                    };
+                    loadingSettingsRef.set(defaultSettings);
+                    document.getElementById('loadingLogo').src = DEFAULT_LOGO_URL;
+                }
+            });
+        }
+
+        function hideLoadingScreen() {
+            const loadingScreen = document.getElementById('loadingScreen');
+            const mainContent = document.getElementById('mainAppContent');
+            
+            setTimeout(() => {
+                loadingScreen.classList.add('hide');
+                mainContent.classList.add('visible');
+                
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                }, 500);
+            }, 1500);
+        }
+
         function loadCategories() {
             categoriesRef.on('value', (snapshot) => {
                 categories = [];
@@ -591,6 +804,7 @@
                 }
                 channels = newChannels;
                 renderCurrentView();
+                hideLoadingScreen();
             });
         }
 
@@ -624,17 +838,25 @@
             
             if (liveEvents.length > 0) {
                 eventDiv.innerHTML = liveEvents.map(ev => {
+                    const validT1Logo = getValidLogoUrl(ev.t1Logo);
+                    const validT2Logo = getValidLogoUrl(ev.t2Logo);
                     const safeEvent = {
                         team1: ev.team1 || 'টিম ১', team2: ev.team2 || 'টিম ২', url: ev.url || TEST_STREAMS[0],
-                        t1Logo: ev.t1Logo || '', t2Logo: ev.t2Logo || '', type: ev.type || 'লাইভ ম্যাচ'
+                        t1Logo: validT1Logo, t2Logo: validT2Logo, type: ev.type || 'লাইভ ম্যাচ'
                     };
                     const escapedEv = JSON.stringify(safeEvent).replace(/'/g, "&#39;");
                     return `<div class="event-card" onclick='openPlayer(${escapedEv.replace(/"/g, '&quot;')}, true)'>
                         <div class="flex justify-center items-center gap-1 mb-1 text-[9px] font-bold text-gray-400"><i class="fa-solid fa-circle-nodes text-emerald-400"></i> ${ev.type || 'লাইভ ম্যাচ'}</div>
                         <div class="flex justify-between items-center px-4 md:px-8">
-                            <div class="flex flex-col items-center text-center w-24"><img src="${ev.t1Logo || ''}" class="w-12 h-12 rounded-full object-cover bg-slate-800" onerror="this.src='https://placehold.co/60x60/1e293b/ffffff?text=Team1'"><span class="text-[11px] md:text-[13px] font-bold mt-1 truncate max-w-[80px]">${ev.team1 || 'টিম ১'}</span></div>
+                            <div class="flex flex-col items-center text-center w-24">
+                                <img src="${validT1Logo}" class="event-logo" onerror="this.src='${DEFAULT_LOGO_URL}'">
+                                <span class="text-[11px] md:text-[13px] font-bold mt-1 truncate max-w-[80px]">${ev.team1 || 'টিম ১'}</span>
+                            </div>
                             <div class="flex flex-col items-center"><span class="live-dot mb-1"></span><span class="text-[8px] md:text-[10px] text-red-500 font-bold uppercase">Live Now</span></div>
-                            <div class="flex flex-col items-center text-center w-24"><img src="${ev.t2Logo || ''}" class="w-12 h-12 rounded-full object-cover bg-slate-800" onerror="this.src='https://placehold.co/60x60/1e293b/ffffff?text=Team2'"><span class="text-[11px] md:text-[13px] font-bold mt-1 truncate max-w-[80px]">${ev.team2 || 'টিম ২'}</span></div>
+                            <div class="flex flex-col items-center text-center w-24">
+                                <img src="${validT2Logo}" class="event-logo" onerror="this.src='${DEFAULT_LOGO_URL}'">
+                                <span class="text-[11px] md:text-[13px] font-bold mt-1 truncate max-w-[80px]">${ev.team2 || 'টিম ২'}</span>
+                            </div>
                         </div>
                         <div class="text-center bd-time mt-2"></div>
                     </div>`;
@@ -668,13 +890,21 @@
             
             grid.className = "channel-grid";
             grid.innerHTML = channels.map(ch => {
+                const validLogo = getValidLogoUrl(ch.logo);
                 const safeCh = {
-                    id: ch.id, name: ch.name || 'চ্যানেল', logo: ch.logo || '',
+                    id: ch.id, name: ch.name || 'চ্যানেল', logo: validLogo,
                     category: ch.category || 'জেনারেল', desc: ch.desc || '', url: ch.url || TEST_STREAMS[0]
                 };
                 const escapedCh = JSON.stringify(safeCh).replace(/'/g, "&#39;");
                 return `<div class="glass p-4 channel-card rounded-xl" onclick='openPlayer(${escapedCh.replace(/"/g, '&quot;')}, false)'>
-                    <div class="flex gap-4 items-center"><img src="${ch.logo || 'https://placehold.co/60x60/1e293b/ffffff?text=TV'}" class="w-16 h-16 rounded-lg object-contain bg-white p-1" onerror="this.src='https://placehold.co/60x60/1e293b/ffffff?text=TV'"><div><h3 class="font-bold text-white">${escapeHtml(ch.name)}</h3><span class="text-xs text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded inline-block mt-1">${ch.category || 'জেনারেল'}</span><p class="text-[11px] text-gray-400 mt-1 truncate w-40">${escapeHtml(ch.desc || '')}</p></div></div>
+                    <div class="flex gap-4 items-center">
+                        <img src="${validLogo}" class="channel-logo" onerror="this.src='${DEFAULT_LOGO_URL}'">
+                        <div>
+                            <h3 class="font-bold text-white">${escapeHtml(ch.name)}</h3>
+                            <span class="text-xs text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded inline-block mt-1">${ch.category || 'জেনারেল'}</span>
+                            <p class="text-[11px] text-gray-400 mt-1 truncate w-40">${escapeHtml(ch.desc || '')}</p>
+                        </div>
+                    </div>
                 </div>`;
             }).join('');
         }
@@ -697,9 +927,13 @@
                 grid.innerHTML = '<p class="text-gray-400 text-center col-span-full">কোন স্পোর্টস চ্যানেল নেই</p>';
             } else {
                 grid.innerHTML = sports.map(ch => {
-                    const safeCh = { name: ch.name, url: ch.url, logo: ch.logo };
+                    const validLogo = getValidLogoUrl(ch.logo);
+                    const safeCh = { name: ch.name, url: ch.url, logo: validLogo };
                     const escapedCh = JSON.stringify(safeCh).replace(/'/g, "&#39;");
-                    return `<div class="text-center cursor-pointer bg-slate-800 p-3 rounded-xl hover:bg-slate-700 transition" onclick='openPlayer(${escapedCh.replace(/"/g, '&quot;')}, false)'><div class="sports-circle"><img src="${ch.logo || 'https://placehold.co/60x60/1e293b/ffffff?text=TV'}" onerror="this.src='https://placehold.co/60x60/1e293b/ffffff?text=TV'"></div><p class="text-xs mt-1 truncate">${escapeHtml(ch.name)}</p></div>`;
+                    return `<div class="text-center cursor-pointer bg-slate-800 p-3 rounded-xl hover:bg-slate-700 transition" onclick='openPlayer(${escapedCh.replace(/"/g, '&quot;')}, false)'>
+                        <div class="sports-circle"><img src="${validLogo}" onerror="this.src='${DEFAULT_LOGO_URL}'"></div>
+                        <p class="text-xs mt-1 truncate">${escapeHtml(ch.name)}</p>
+                    </div>`;
                 }).join('');
             }
         }
@@ -725,7 +959,15 @@
                 const filtered = channels; 
                 const grid = document.getElementById('channelGrid'); 
                 grid.className = "channel-grid"; 
-                grid.innerHTML = filtered.map(ch => `<div class="glass p-4 channel-card rounded-xl" onclick='openPlayer(${JSON.stringify({ name: ch.name, logo: ch.logo, category: ch.category, url: ch.url }).replace(/'/g, "&#39;").replace(/"/g, '&quot;')}, false)'><div class="flex gap-4 items-center"><img src="${ch.logo || 'https://placehold.co/60x60/1e293b/ffffff?text=TV'}" class="w-16 h-16 rounded-lg object-contain bg-white p-1"><div><h3 class="font-bold text-white">${escapeHtml(ch.name)}</h3><span class="text-xs text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded inline-block mt-1">${ch.category || 'জেনারেল'}</span></div></div></div>`).join(''); 
+                grid.innerHTML = filtered.map(ch => {
+                    const validLogo = getValidLogoUrl(ch.logo);
+                    return `<div class="glass p-4 channel-card rounded-xl" onclick='openPlayer(${JSON.stringify({ name: ch.name, logo: validLogo, category: ch.category, url: ch.url }).replace(/'/g, "&#39;").replace(/"/g, '&quot;')}, false)'>
+                        <div class="flex gap-4 items-center">
+                            <img src="${validLogo}" class="channel-logo" onerror="this.src='${DEFAULT_LOGO_URL}'">
+                            <div><h3 class="font-bold text-white">${escapeHtml(ch.name)}</h3><span class="text-xs text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded inline-block mt-1">${ch.category || 'জেনারেল'}</span></div>
+                        </div>
+                    </div>`;
+                }).join(''); 
                 return; 
             }
             
@@ -736,7 +978,15 @@
             if(filtered.length === 0) {
                 grid.innerHTML = `<p class="text-gray-400 text-center col-span-full">${cat} ক্যাটাগরিতে কোন চ্যানেল নেই</p>`;
             } else {
-                grid.innerHTML = filtered.map(ch => `<div class="glass p-4 channel-card rounded-xl" onclick='openPlayer(${JSON.stringify({ name: ch.name, logo: ch.logo, category: ch.category, url: ch.url }).replace(/'/g, "&#39;").replace(/"/g, '&quot;')}, false)'><div class="flex gap-4 items-center"><img src="${ch.logo || 'https://placehold.co/60x60/1e293b/ffffff?text=TV'}" class="w-16 h-16 rounded-lg object-contain bg-white p-1"><div><h3 class="font-bold text-white">${escapeHtml(ch.name)}</h3><span class="text-xs text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded inline-block mt-1">${ch.category}</span></div></div></div>`).join('');
+                grid.innerHTML = filtered.map(ch => {
+                    const validLogo = getValidLogoUrl(ch.logo);
+                    return `<div class="glass p-4 channel-card rounded-xl" onclick='openPlayer(${JSON.stringify({ name: ch.name, logo: validLogo, category: ch.category, url: ch.url }).replace(/'/g, "&#39;").replace(/"/g, '&quot;')}, false)'>
+                        <div class="flex gap-4 items-center">
+                            <img src="${validLogo}" class="channel-logo" onerror="this.src='${DEFAULT_LOGO_URL}'">
+                            <div><h3 class="font-bold text-white">${escapeHtml(ch.name)}</h3><span class="text-xs text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded inline-block mt-1">${ch.category}</span></div>
+                        </div>
+                    </div>`;
+                }).join('');
             }
         }
 
@@ -768,7 +1018,15 @@
             if(filtered.length === 0) {
                 grid.innerHTML = '<p class="text-gray-400 text-center col-span-full">কোন চ্যানেল পাওয়া যায়নি</p>';
             } else {
-                grid.innerHTML = filtered.map(ch => `<div class="glass p-4 channel-card rounded-xl" onclick='openPlayer(${JSON.stringify({ name: ch.name, logo: ch.logo, category: ch.category, url: ch.url }).replace(/'/g, "&#39;").replace(/"/g, '&quot;')}, false)'><div class="flex gap-4 items-center"><img src="${ch.logo || 'https://placehold.co/60x60/1e293b/ffffff?text=TV'}" class="w-16 h-16 rounded-lg object-contain bg-white p-1"><div><h3 class="font-bold text-white">${escapeHtml(ch.name)}</h3><span class="text-xs text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded inline-block mt-1">${ch.category}</span></div></div></div>`).join('');
+                grid.innerHTML = filtered.map(ch => {
+                    const validLogo = getValidLogoUrl(ch.logo);
+                    return `<div class="glass p-4 channel-card rounded-xl" onclick='openPlayer(${JSON.stringify({ name: ch.name, logo: validLogo, category: ch.category, url: ch.url }).replace(/'/g, "&#39;").replace(/"/g, '&quot;')}, false)'>
+                        <div class="flex gap-4 items-center">
+                            <img src="${validLogo}" class="channel-logo" onerror="this.src='${DEFAULT_LOGO_URL}'">
+                            <div><h3 class="font-bold text-white">${escapeHtml(ch.name)}</h3><span class="text-xs text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded inline-block mt-1">${ch.category}</span></div>
+                        </div>
+                    </div>`;
+                }).join('');
             }
         }
 
@@ -880,6 +1138,8 @@
 
         setInterval(updateTime, 1000);
 
+        // সবকিছু লোড করুন
+        loadLoadingSettings();
         loadCategories();
         loadChannels();
         loadEvents();
