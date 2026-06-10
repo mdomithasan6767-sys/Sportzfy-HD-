@@ -5,19 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <title>Sportzfy TV - লাইভ স্পোর্টস ও টিভি</title>
     
-    <!-- Font Awesome -->
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- CDNBye Plugin (P2P) + JW Player -->
     <script src="https://cdn.jsdelivr.net/npm/cdnbye@latest"></script>
     <script src="https://cdn.jsdelivr.net/gh/teranode/jw-provider@0.0.9/provider.hlsjs.js"></script>
     <script src="https://ssl.p.jwpcdn.com/player/v/8.22.0/jwplayer.js"></script>
     
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Firebase (Compat) -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
@@ -35,6 +31,11 @@
             overflow-x: hidden;
             margin: 0; padding: 0;
         }
+        
+        *:focus {
+            outline: none;
+        }
+        
         .glass {
             background: var(--glass);
             backdrop-filter: blur(10px);
@@ -46,6 +47,40 @@
             backdrop-filter: blur(15px);
             border-top: 1px solid var(--glass-border);
         }
+        
+        /* নিচের নেভিগেশন বাটন স্টাইল */
+        .nav-btn {
+            transition: all 0.2s ease;
+            cursor: pointer;
+            background: transparent;
+            box-shadow: none !important;
+        }
+        
+        .nav-btn:active {
+            transform: scale(0.96);
+        }
+        
+        .nav-btn:focus {
+            outline: none !important;
+            box-shadow: none !important;
+            background: transparent !important;
+        }
+        
+        .nav-btn.active-nav {
+            color: #00ff88 !important;
+        }
+        
+        .nav-btn.active-nav i,
+        .nav-btn.active-nav span {
+            color: #00ff88 !important;
+        }
+        
+        .nav-btn i,
+        .nav-btn span {
+            color: #9ca3af;
+            transition: color 0.2s ease;
+        }
+        
         .active-tab {
             color: var(--primary);
             border-bottom: 2px solid var(--primary);
@@ -67,31 +102,45 @@
             border-color: var(--primary);
             background: rgba(255, 255, 255, 0.1);
         }
-        /* গোলাকার লোগোর জন্য স্টাইল */
+        
+        .channel-card:focus, 
+        .event-card:focus, 
+        .cat-item:focus, 
+        .category-btn:focus {
+            outline: 1px solid #00ff88 !important;
+            outline-offset: 1px !important;
+            transform: scale(1.01) !important;
+            background: rgba(0, 255, 136, 0.1) !important;
+            box-shadow: none !important;
+        }
+        
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+        
         .sports-circle {
             width: 75px; height: 75px;
             border-radius: 50%;
-            border: 2px solid var(--primary);
-            background: #1e293b; /* ডার্ক ব্যাকগ্রাউন্ড */
-            padding: 5px;
+            border: 1px solid var(--primary);
+            background: #1e293b;
+            padding: 0px;
             display: flex; align-items: center; justify-content: center; margin: 0 auto;
-            overflow: hidden; /* ছবি বৃত্তের বাইরে যাবে না */
+            overflow: hidden;
         }
         .sports-circle img { 
             width: 100%; 
             height: 100%; 
-            object-fit: cover; /* ছবি পুরো বৃত্ত জুড়ে কভার করবে */
-            border-radius: 50%; /* ছবিকেও গোলাকার করে */
+            object-fit: cover; 
+            border-radius: 50%;
         }
         
-        /* চ্যানেল লিস্টের লোগো গোলাকার করার জন্য */
         .channel-logo {
             width: 64px;
             height: 64px;
             border-radius: 50%;
             object-fit: cover;
             background: white;
-            padding: 4px;
+            padding: 5px;
             border: 1px solid rgba(0, 255, 136, 0.3);
         }
         
@@ -103,9 +152,10 @@
             cursor: pointer;
             transition: all 0.2s;
         }
-        .cat-item:hover {
+        .cat-item:hover, .cat-item:focus {
             background: rgba(0, 255, 136, 0.1);
             border-color: var(--primary);
+            outline: none;
         }
         
         .event-card {
@@ -117,9 +167,10 @@
             cursor: pointer;
             transition: all 0.2s;
         }
-        .event-card:hover {
+        .event-card:hover, .event-card:focus {
             border-color: #00ff88;
             transform: scale(1.01);
+            outline: none;
         }
         .live-dot {
             height: 8px; width: 8px;
@@ -129,14 +180,13 @@
             box-shadow: 0 0 8px #ff4d4d;
             animation: pulse 1.5s infinite;
         }
-        /* ইভেন্টের লোগো গোলাকার করার জন্য */
         .event-logo {
-            width: 48px;
-            height: 48px;
+            width: 50px;
+            height: 50px; 
             border-radius: 50%;
             object-fit: cover;
             background: #1e293b;
-            padding: 2px;
+            padding: 0px;
         }
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
         .bd-time {
@@ -203,7 +253,7 @@
             backdrop-filter: blur(3px);
         }
         
-        /* লোডিং স্ক্রিন স্টাইল */
+        /* ========== লোডিং স্ক্রিন স্টাইল ========== */
         .loading-screen {
             position: fixed;
             top: 0;
@@ -221,43 +271,55 @@
             opacity: 0;
             visibility: hidden;
         }
+        
+        /* লোগো ধারক - গোলাকার */
         .loader-logo {
             width: 120px;
             height: 120px;
-            margin: 0 auto 20px;
-            border-radius: 50%; /* লোডিং লোগো গোলাকার */
+            margin: 0 auto 10px;
+            border-radius: 50%;
             background: linear-gradient(135deg, #00ff8844, #00ff8822);
             animation: pulseGlow 1.5s infinite;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            padding: 10px;
+            padding: 0px;
         }
         .loader-logo img {
-            width: 100%;
-            height: 100%;
+            width: 110%;
+            height: 105%;
             object-fit: cover;
             border-radius: 50%;
         }
+        
+        /* লোগোর চারপাশের পালস ইফেক্ট */
         @keyframes pulseGlow {
             0% { box-shadow: 0 0 0 0 #00ff8844; }
-            70% { box-shadow: 0 0 0 20px #00ff8800; }
+            70% { box-shadow: 0 0 0 25px #00ff8800; }
             100% { box-shadow: 0 0 0 0 #00ff8800; }
         }
+        
+        /* স্পিনার আইকন - ঘুরবে */
         .loader-spinner {
-            width: 50px;
+            width: 40px;
             height: 50px;
-            border: 3px solid rgba(0, 255, 136, 0.3);
-            border-top: 3px solid #00ff88;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
+            margin: 10px auto;
+            position: relative;
         }
+        .loader-spinner i {
+            font-size: 20px;
+            color: #00ff88;
+            animation: spin 1s linear infinite;
+            display: block;
+        }
+        
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        
+        /* অ্যাপের নাম */
         .loader-name {
             font-size: 28px;
             font-weight: bold;
@@ -268,14 +330,16 @@
             color: transparent;
             margin-top: 15px;
         }
+        
+        /* ট্যাগলাইন */
         .loader-tagline {
             text-align: center;
             color: #94a3b8;
-            font-size: 14px;
-            margin-top: 8px;
+            font-size: 15px;
+            margin-top: 1px;
         }
+        /* ========== লোডিং স্ক্রিন স্টাইল শেষ ========== */
         
-        /* সম্পূর্ণ ডিসপ্লে জুড়েই ১০০% নো-বর্ডার ফুল স্ক্রিন মোড */
         .video-modal {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -320,10 +384,6 @@
             justify-content: center;
             border-radius: 50%;
         }
-        .player-back-icon i {
-            font-size: 16px;
-            color: #FFFFFF;
-        }
         
         #jwPlayerContainer {
             width: 100% !important;
@@ -358,11 +418,6 @@
             box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.5);
         }
         
-        .cursor-pointer {
-            cursor: pointer;
-        }
-        
-        /* মূল কন্টেন্ট শুরুতে লুকানো */
         #mainAppContent {
             opacity: 0;
             transition: opacity 0.5s ease;
@@ -371,32 +426,34 @@
             opacity: 1;
         }
         
-        /* ডিফল্ট লোগো ব্যবহারের জন্য হেলপার */
-        .default-logo {
-            background-color: #1e293b;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        #searchInput:focus {
+            outline: 1px solid #00ff88;
+            outline-offset: 1px;
         }
     </style>
 </head>
 <body>
 
-    <!-- লোডিং স্ক্রিন -->
+    <!-- লোডিং স্ক্রিন - লোগো নিচে নাম, তারপর স্পিনার আইকন ঘুরবে -->
     <div id="loadingScreen" class="loading-screen">
         <div class="text-center">
+            <!-- লোগো -->
             <div class="loader-logo">
                 <img id="loadingLogo" src="https://i.postimg.cc/yYvM1dRS/20260610-235713.png" alt="Logo">
             </div>
-            <div class="loader-spinner"></div>
+            <!-- নাম (লোগোর নিচে) -->
             <div id="loadingAppName" class="loader-name">Sportzfy TV</div>
+            <!-- স্পিনার আইকন (নামের নিচে, ঘুরবে) -->
+            <div class="loader-spinner">
+                <i class="fa-solid fa-circle-notch"></i>
+            </div>
+            <!-- ট্যাগলাইন (সবশেষে) -->
             <div id="loadingTagline" class="loader-tagline">লাইভ স্পোর্টস স্ট্রিমিং</div>
         </div>
     </div>
 
     <div id="drawerOverlay" onclick="toggleDrawer()"></div>
 
-    <!-- Telegram Join Popup -->
     <div id="telegramPopup" class="telegram-popup-overlay">
         <div class="telegram-popup p-6">
             <div class="flex justify-center mb-3">
@@ -407,52 +464,47 @@
             <h3 id="popupHeading" class="text-xl font-bold text-center text-white mb-2">Join Our Channel</h3>
             <p id="popupDesc" class="text-gray-300 text-center text-sm mb-5">Stay updated with latest matches and updates by joining our Telegram channel!</p>
             <div class="flex flex-col gap-3">
-                <a id="telegramJoinLink" href="#" target="_blank" class="bg-gradient-to-r from-blue-600 to-emerald-600 text-white font-bold py-3 rounded-xl text-center transition hover:scale-105">Join Now</a>
-                <button id="laterBtn" class="bg-slate-800 text-gray-300 font-medium py-3 rounded-xl transition hover:bg-slate-700">Later</button>
+                <a id="telegramJoinLink" href="#" target="_blank" class="bg-gradient-to-r from-blue-600 to-emerald-600 text-white font-bold py-3 rounded-xl text-center transition hover:scale-105" tabindex="0">Join Now</a>
+                <button id="laterBtn" class="bg-slate-800 text-gray-300 font-medium py-3 rounded-xl transition hover:bg-slate-700" tabindex="0">Later</button>
                 <div id="dontShowContainer" class="flex items-center justify-center gap-2 mt-2">
-                    <input type="checkbox" id="dontShowAgain" class="w-4 h-4 rounded border-gray-500 bg-transparent">
+                    <input type="checkbox" id="dontShowAgain" class="w-4 h-4 rounded border-gray-500 bg-transparent" tabindex="0">
                     <label for="dontShowAgain" class="text-xs text-gray-400">Don't show again</label>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Video Player Modal -->
     <div id="videoPlayerModal" class="video-modal">
         <div class="video-modal-content" id="modalContentBlock">
-            <div class="player-back-icon" onclick="closeVideoPlayer()">
+            <div class="player-back-icon" onclick="closeVideoPlayer()" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ') closeVideoPlayer()">
                 <i class="fa-solid fa-arrow-left"></i>
             </div>
             <div id="jwPlayerContainer"></div>
         </div>
     </div>
 
-    <!-- মূল অ্যাপ্লিকেশন কন্টেন্ট -->
     <div id="mainAppContent">
-        <!-- হেডার -->
         <header class="sticky top-0 z-50 glass m-2 p-4 flex justify-between items-center">
             <div class="flex items-center gap-3">
-                <button onclick="toggleDrawer()" class="text-2xl"><i class="fa-solid fa-bars-staggered"></i></button>
+                <button onclick="toggleDrawer()" class="text-2xl" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ') toggleDrawer()"><i class="fa-solid fa-bars-staggered"></i></button>
                 <h1 id="appHeaderTitle" class="text-xl font-bold tracking-tighter text-emerald-400">Sportzfy TV</h1>
             </div>
             <div class="flex gap-4 items-center">
-                <button onclick="toggleSearch()" class="text-xl"><i class="fa-solid fa-magnifying-glass"></i></button>
+                <button onclick="toggleSearch()" class="text-xl" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ') toggleSearch()"><i class="fa-solid fa-magnifying-glass"></i></button>
                 <div class="relative">
                     <i class="fa-solid fa-bell text-xl"></i>
                 </div>
             </div>
         </header>
 
-        <!-- Notice Section -->
         <div class="mx-2 mb-4 overflow-hidden glass p-2 text-sm bg-emerald-900/20 text-emerald-300">  
             <div class="scrolling-text" id="noticeText">লোড হচ্ছে...</div>  
         </div>
 
         <div id="searchBar" class="hidden px-4 mb-4">
-            <input type="text" id="searchInput" onkeyup="searchChannels()" placeholder="🔍 চ্যানেল খুঁজুন..." class="w-full p-3 rounded-xl bg-slate-800 border border-emerald-500/30 focus:outline-none focus:border-emerald-500 text-white">
+            <input type="text" id="searchInput" onkeyup="searchChannels()" placeholder="🔍 চ্যানেল খুঁজুন..." class="w-full p-3 rounded-xl bg-slate-800 border border-emerald-500/30 focus:outline-none focus:border-emerald-500 text-white" tabindex="0">
         </div>
 
-        <!-- Dynamic Category Navigation -->
         <div id="topCategoryNav" class="flex overflow-x-auto gap-3 px-4 mb-6 no-scrollbar"></div>
 
         <div id="mainContent" class="px-4">
@@ -461,48 +513,238 @@
         </div>
     </div>
 
-    <!-- Drawer Menu -->
     <div id="drawer" class="fixed inset-y-0 left-0 w-64 bg-slate-900 z-[101] transform -translate-x-full transition-transform duration-300 glass border-r border-emerald-500/20">
         <div class="p-6">
             <div class="flex justify-between items-center mb-8">
                 <h2 class="text-2xl font-bold text-emerald-400">মেনু</h2>
-                <button onclick="toggleDrawer()" class="text-xl">&times;</button>
+                <button onclick="toggleDrawer()" class="text-xl" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ') toggleDrawer()">&times;</button>
             </div>
             <nav class="space-y-4">
-                <a href="#" onclick="initApp(); toggleDrawer(); return false;" class="flex items-center gap-3 p-3 hover:bg-emerald-500/10 rounded-lg"><i class="fa-solid fa-house"></i> Home</a>
-                <a href="#" class="flex items-center gap-3 p-3 hover:bg-emerald-500/10 rounded-lg"><i class="fa-solid fa-heart"></i> Favorite</a>
-                <a href="#" class="flex items-center gap-3 p-3 hover:bg-emerald-500/10 rounded-lg"><i class="fa-solid fa-gear"></i> Setting</a>
+                <a href="#" onclick="initApp(); toggleDrawer(); return false;" class="flex items-center gap-3 p-3 hover:bg-emerald-500/10 rounded-lg" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ') { initApp(); toggleDrawer(); return false; }"><i class="fa-solid fa-house"></i> Home</a>
+                <a href="#" class="flex items-center gap-3 p-3 hover:bg-emerald-500/10 rounded-lg" tabindex="0"><i class="fa-solid fa-heart"></i> Favorite</a>
+                <a href="#" class="flex items-center gap-3 p-3 hover:bg-emerald-500/10 rounded-lg" tabindex="0"><i class="fa-solid fa-gear"></i> Setting</a>
             </nav>
         </div>
     </div>
 
-    <!-- Bottom Navigation -->
     <nav class="fixed bottom-0 left-0 right-0 h-16 nav-bottom flex justify-around items-center z-50">
-        <button onclick="initApp()" class="flex flex-col items-center text-emerald-400 nav-btn" id="btnLive">
+        <button onclick="setActiveNav('btnLive'); initApp();" class="flex flex-col items-center nav-btn" id="btnLive" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ') { setActiveNav('btnLive'); initApp(); }">
             <i class="fa-solid fa-tower-broadcast text-xl"></i>
             <span class="text-[10px]">Live Events</span>
         </button>
-        <button onclick="showSportsGrid()" class="flex flex-col items-center text-gray-400 nav-btn" id="btnSports">
+        <button onclick="setActiveNav('btnSports'); showSportsGrid();" class="flex flex-col items-center nav-btn" id="btnSports" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ') { setActiveNav('btnSports'); showSportsGrid(); }">
             <i class="fa-solid fa-volleyball text-xl"></i>
             <span class="text-[10px]">Sports</span>
         </button>
-        <button onclick="showCategoriesList()" class="flex flex-col items-center text-gray-400 nav-btn" id="btnCat">
+        <button onclick="setActiveNav('btnCat'); showCategoriesList();" class="flex flex-col items-center nav-btn" id="btnCat" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ') { setActiveNav('btnCat'); showCategoriesList(); }">
             <i class="fa-solid fa-list text-xl"></i>
             <span class="text-[10px]">Category</span>
         </button>
     </nav>
 
     <script>
-        // ডিফল্ট লোগো URL (আপনার দেওয়া ছবি)
+        function setActiveNav(activeId) {
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-nav');
+            });
+            const activeBtn = document.getElementById(activeId);
+            if(activeBtn) {
+                activeBtn.classList.add('active-nav');
+            }
+        }
+        
         const DEFAULT_LOGO_URL = "https://i.postimg.cc/yYvM1dRS/20260610-235713.png";
         
-        // JW Player Key
         jwplayer.key = "uoW6qHjBL3KNudxKVnwa3rt5LlTakbko9e6aQ6VUyKQ=";
         
         let currentJWPlayer = null;
         let isPlayerActive = false;
+        let currentFocusIndex = 0;
+        let focusableElements = [];
         
-        // Firebase Config
+        function updateFocusableElements() {
+            const selectors = '.channel-card, .event-card, .cat-item, .category-btn, .nav-btn, .player-back-icon, #telegramJoinLink, #laterBtn, .sports-grid > div';
+            focusableElements = Array.from(document.querySelectorAll(selectors)).filter(el => {
+                const isVisible = el.offsetParent !== null;
+                const isNotDisabled = el.getAttribute('disabled') !== 'disabled';
+                return isVisible && isNotDisabled;
+            });
+        }
+        
+        document.addEventListener('keydown', function(e) {
+            const modal = document.getElementById('videoPlayerModal');
+            if (modal && modal.classList.contains('active')) {
+                if (e.key === 'Escape' || e.key === 'Backspace') {
+                    e.preventDefault();
+                    closeVideoPlayer();
+                }
+                return;
+            }
+            
+            updateFocusableElements();
+            if (focusableElements.length === 0) return;
+            
+            switch(e.key) {
+                case 'ArrowDown':
+                    e.preventDefault();
+                    currentFocusIndex = (currentFocusIndex + 1) % focusableElements.length;
+                    focusableElements[currentFocusIndex]?.focus();
+                    focusableElements[currentFocusIndex]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    break;
+                case 'ArrowUp':
+                    e.preventDefault();
+                    currentFocusIndex = (currentFocusIndex - 1 + focusableElements.length) % focusableElements.length;
+                    focusableElements[currentFocusIndex]?.focus();
+                    focusableElements[currentFocusIndex]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    break;
+                case 'ArrowLeft':
+                    e.preventDefault();
+                    if (focusableElements[currentFocusIndex]) {
+                        let prevIndex = currentFocusIndex - 1;
+                        if (prevIndex >= 0) {
+                            currentFocusIndex = prevIndex;
+                            focusableElements[currentFocusIndex]?.focus();
+                        }
+                    }
+                    break;
+                case 'ArrowRight':
+                    e.preventDefault();
+                    if (focusableElements[currentFocusIndex]) {
+                        let nextIndex = currentFocusIndex + 1;
+                        if (nextIndex < focusableElements.length) {
+                            currentFocusIndex = nextIndex;
+                            focusableElements[currentFocusIndex]?.focus();
+                        }
+                    }
+                    break;
+                case 'Enter':
+                case ' ':
+                    e.preventDefault();
+                    if (document.activeElement && document.activeElement.click) {
+                        document.activeElement.click();
+                    }
+                    break;
+                case 'Backspace':
+                case 'Escape':
+                    e.preventDefault();
+                    handleBackButton();
+                    break;
+            }
+        });
+        
+        document.addEventListener('focusin', function(e) {
+            const index = focusableElements.indexOf(e.target);
+            if (index !== -1) {
+                currentFocusIndex = index;
+            }
+        });
+
+        function getValidLogoUrl(logoUrl) {
+            if (logoUrl && logoUrl.startsWith('http') && (logoUrl.includes('.png') || logoUrl.includes('.jpg') || logoUrl.includes('.jpeg') || logoUrl.includes('.gif') || logoUrl.includes('.svg') || logoUrl.includes('flagcdn'))) {
+                return logoUrl;
+            }
+            return DEFAULT_LOGO_URL;
+        }
+
+        function destroyPlayerCompletely() {
+            if (currentJWPlayer) {
+                try {
+                    currentJWPlayer.pause(true);
+                    currentJWPlayer.setMute(true);
+                    currentJWPlayer.destroy();
+                } catch(e) {}
+                currentJWPlayer = null;
+            }
+            const container = document.getElementById('jwPlayerContainer');
+            if (container) {
+                const videos = container.querySelectorAll('video');
+                videos.forEach(video => {
+                    video.pause();
+                    video.src = '';
+                    video.load();
+                    video.remove();
+                });
+                container.innerHTML = '';
+            }
+            isPlayerActive = false;
+        }
+
+        function openPlayerWithJW(url, title = '') {
+            if (!url) return;
+            destroyPlayerCompletely();
+            const modal = document.getElementById('videoPlayerModal');
+            const container = document.getElementById('jwPlayerContainer');
+            const modalContent = document.getElementById('modalContentBlock');
+            container.innerHTML = '<div id="jwplayer"></div>';
+            currentJWPlayer = jwplayer('jwplayer').setup({
+                file: url,
+                width: '100%',
+                height: '100%',
+                autostart: true,
+                controls: true,
+                stretching: "exact", 
+                abouttext: '',
+                aboutlink: '',
+                mute: false,
+                hlsjsConfig: { enableWorker: true, lowLatencyMode: true, p2pConfig: { live: true, logLevel: false } }
+            });
+            currentJWPlayer.on('ready', function() { currentJWPlayer.setMute(false); currentJWPlayer.play(); });
+            modal.classList.add('active');
+            isPlayerActive = true;
+            if (modalContent.requestFullscreen) modalContent.requestFullscreen();
+            else if (modalContent.webkitRequestFullscreen) modalContent.webkitRequestFullscreen();
+            else if (modalContent.mozRequestFullScreen) modalContent.mozRequestFullScreen();
+            else if (modalContent.msRequestFullscreen) modalContent.msRequestFullscreen();
+            try { if (screen.orientation && screen.orientation.lock) screen.orientation.lock('landscape'); } catch(e) {}
+            pushUIState('player');
+        }
+        
+        function closeVideoPlayer() {
+            const modal = document.getElementById('videoPlayerModal');
+            destroyPlayerCompletely();
+            if (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement) {
+                if (document.exitFullscreen) document.exitFullscreen();
+                else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+                else if (document.mozCancelFullScreen) document.mozCancelFullScreen();
+                else if (document.msExitFullscreen) document.msExitFullscreen();
+            }
+            try { if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock(); } catch(e) {}
+            if (modal && modal.classList.contains('active')) modal.classList.remove('active');
+            isPlayerActive = false;
+            setTimeout(() => { updateFocusableElements(); if (focusableElements.length > 0) focusableElements[0]?.focus(); }, 100);
+        }
+        
+        const onFSChange = () => {
+            if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement) {
+                const modal = document.getElementById('videoPlayerModal');
+                if (modal && modal.classList.contains('active')) closeVideoPlayer();
+            }
+        };
+        document.addEventListener('fullscreenchange', onFSChange);
+        document.addEventListener('webkitfullscreenchange', onFSChange);
+        document.addEventListener('mozfullscreenchange', onFSChange);
+        
+        function openPlayer(item, isEvent = false) {
+            if (!item) return;
+            let streamUrl = item.url || TEST_STREAMS[0];
+            streamUrl = getValidStreamUrl(streamUrl);
+            openPlayerWithJW(streamUrl, item.name || (isEvent ? `${item.team1} vs ${item.team2}` : ''));
+        }
+        
+        function handleBackButton() {
+            const modal = document.getElementById('videoPlayerModal');
+            if (modal && modal.classList.contains('active')) { closeVideoPlayer(); return true; }
+            const drawer = document.getElementById('drawer');
+            if (drawer && drawer.classList.contains('translate-x-0')) { toggleDrawer(); return true; }
+            const searchBar = document.getElementById('searchBar');
+            if (searchBar && !searchBar.classList.contains('hidden')) { searchBar.classList.add('hidden'); return true; }
+            return false;
+        }
+
+        function pushUIState(state) { uiStateStack.push(state); history.pushState({ state: state }, ''); }
+        window.addEventListener('popstate', function(event) { handleBackButton(); });
+        window.addEventListener('load', () => { history.replaceState({ state: 'default' }, ''); uiStateStack = []; setTimeout(() => { updateFocusableElements(); if (focusableElements.length > 0) focusableElements[0]?.focus(); }, 2000); });
+
         const firebaseConfig = {
             apiKey: "AIzaSyAFBTPu9kk46xj8QWTdl-WaBZHDKjxCOzU",
             authDomain: "sportzfy-tv-5ab8d.firebaseapp.com",
@@ -527,264 +769,35 @@
         let categories = [];
         let currentView = 'live';
         let uiStateStack = [];
-        let telegramSettings = {
-            enabled: true, link: '', heading: 'Join Our Channel',
-            description: 'Stay updated with latest matches and updates by joining our Telegram channel!',
-            btnText: 'Join Now', laterText: 'Later', showDontShow: true
-        };
+        let telegramSettings = { enabled: true, link: '', heading: 'Join Our Channel', description: 'Stay updated with latest matches and updates by joining our Telegram channel!', btnText: 'Join Now', laterText: 'Later', showDontShow: true };
         let popupClosedForSession = false;
 
-        const TEST_STREAMS = [
-            "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
-            "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8"
-        ];
+        const TEST_STREAMS = ["https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8", "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8"];
         
-        function getValidStreamUrl(url) {
-            if (!url) return TEST_STREAMS[0];
-            if (url.startsWith('http') && (url.includes('.m3u8') || url.includes('.mp4') || url.includes('.mkv') || url.includes('.mov'))) {
-                return url;
-            }
-            return TEST_STREAMS[0];
-        }
-        
-        // লোগো ভ্যালিডেট করার ফাংশন (খালি বা ভুল থাকলে ডিফল্ট দেবে)
-        function getValidLogoUrl(logoUrl) {
-            if (logoUrl && logoUrl.startsWith('http') && (logoUrl.includes('.png') || logoUrl.includes('.jpg') || logoUrl.includes('.jpeg') || logoUrl.includes('.gif') || logoUrl.includes('.svg') || logoUrl.includes('flagcdn'))) {
-                return logoUrl;
-            }
-            return DEFAULT_LOGO_URL;
-        }
-
-        // প্লেয়ার সম্পূর্ণরূপে ডেস্ট্রয় ও অডিও বন্ধ করার ফাংশন
-        function destroyPlayerCompletely() {
-            if (currentJWPlayer) {
-                try {
-                    currentJWPlayer.pause(true);
-                    currentJWPlayer.setMute(true);
-                    currentJWPlayer.destroy();
-                } catch(e) {
-                    console.log("Player destroy error:", e);
-                }
-                currentJWPlayer = null;
-            }
-            
-            const container = document.getElementById('jwPlayerContainer');
-            if (container) {
-                const videos = container.querySelectorAll('video');
-                videos.forEach(video => {
-                    video.pause();
-                    video.src = '';
-                    video.load();
-                    video.remove();
-                });
-                container.innerHTML = '';
-            }
-            
-            isPlayerActive = false;
-        }
-
-        function openPlayerWithJW(url, title = '') {
-            if (!url) return;
-            
-            destroyPlayerCompletely();
-            
-            const modal = document.getElementById('videoPlayerModal');
-            const container = document.getElementById('jwPlayerContainer');
-            const modalContent = document.getElementById('modalContentBlock');
-            
-            container.innerHTML = '<div id="jwplayer"></div>';
-            
-            currentJWPlayer = jwplayer('jwplayer').setup({
-                file: url,
-                width: '100%',
-                height: '100%',
-                autostart: true,
-                controls: true,
-                stretching: "exact", 
-                abouttext: '',
-                aboutlink: '',
-                mute: false,
-                hlsjsConfig: {
-                    enableWorker: true,
-                    lowLatencyMode: true,
-                    p2pConfig: {
-                        live: true,
-                        logLevel: false,
-                    }
-                },
-            });
-            
-            currentJWPlayer.on('ready', function() {
-                currentJWPlayer.setMute(false);
-                currentJWPlayer.play();
-            });
-            
-            modal.classList.add('active');
-            isPlayerActive = true;
-            
-            if (modalContent.requestFullscreen) {
-                modalContent.requestFullscreen();
-            } else if (modalContent.webkitRequestFullscreen) {
-                modalContent.webkitRequestFullscreen();
-            } else if (modalContent.mozRequestFullScreen) {
-                modalContent.mozRequestFullScreen();
-            } else if (modalContent.msRequestFullscreen) {
-                modalContent.msRequestFullscreen();
-            }
-
-            try {
-                if (screen.orientation && screen.orientation.lock) {
-                    screen.orientation.lock('landscape').catch(e => console.log("Orientation lock not supported"));
-                }
-            } catch(e) {}
-
-            pushUIState('player');
-        }
-        
-        function closeVideoPlayer() {
-            const modal = document.getElementById('videoPlayerModal');
-            
-            destroyPlayerCompletely();
-            
-            if (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement) {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                } else if (document.webkitExitFullscreen) {
-                    document.webkitExitFullscreen();
-                } else if (document.mozCancelFullScreen) {
-                    document.mozCancelFullScreen();
-                } else if (document.msExitFullscreen) {
-                    document.msExitFullscreen();
-                }
-            }
-
-            try {
-                if (screen.orientation && screen.orientation.unlock) {
-                    screen.orientation.unlock();
-                }
-            } catch(e) {}
-
-            if (modal && modal.classList.contains('active')) {
-                modal.classList.remove('active');
-            }
-            
-            isPlayerActive = false;
-        }
-        
-        const onFSChange = () => {
-            if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement) {
-                const modal = document.getElementById('videoPlayerModal');
-                if (modal && modal.classList.contains('active')) {
-                    closeVideoPlayer();
-                }
-            }
-        };
-        document.addEventListener('fullscreenchange', onFSChange);
-        document.addEventListener('webkitfullscreenchange', onFSChange);
-        document.addEventListener('mozfullscreenchange', onFSChange);
-        
-        document.addEventListener('visibilitychange', function() {
-            if (document.hidden && isPlayerActive && currentJWPlayer) {
-                try {
-                    currentJWPlayer.pause(true);
-                } catch(e) {}
-            } else if (!document.hidden && isPlayerActive && currentJWPlayer) {
-                try {
-                    currentJWPlayer.play();
-                } catch(e) {}
-            }
-        });
-
-        function openPlayer(item, isEvent = false) {
-            if (!item) return;
-            let streamUrl = item.url || TEST_STREAMS[0];
-            streamUrl = getValidStreamUrl(streamUrl);
-            openPlayerWithJW(streamUrl, item.name || (isEvent ? `${item.team1} vs ${item.team2}` : ''));
-        }
-        
-        function handleBackButton() {
-            const modal = document.getElementById('videoPlayerModal');
-            if (modal && modal.classList.contains('active')) {
-                closeVideoPlayer();
-                return true;
-            }
-            const drawer = document.getElementById('drawer');
-            if (drawer && drawer.classList.contains('translate-x-0')) {
-                toggleDrawer();
-                return true;
-            }
-            const searchBar = document.getElementById('searchBar');
-            if (searchBar && !searchBar.classList.contains('hidden')) {
-                searchBar.classList.add('hidden');
-                return true;
-            }
-            return false;
-        }
-
-        function pushUIState(state) {
-            uiStateStack.push(state);
-            history.pushState({ state: state }, '');
-        }
-
-        window.addEventListener('popstate', function(event) {
-            handleBackButton();
-        });
-
-        window.addEventListener('load', () => {
-            history.replaceState({ state: 'default' }, '');
-            uiStateStack = [];
-        });
+        function getValidStreamUrl(url) { if (!url) return TEST_STREAMS[0]; if (url.startsWith('http') && (url.includes('.m3u8') || url.includes('.mp4') || url.includes('.mkv') || url.includes('.mov'))) return url; return TEST_STREAMS[0]; }
 
         function loadLoadingSettings() {
             loadingSettingsRef.on('value', (snapshot) => {
                 const settings = snapshot.val();
                 if (settings) {
-                    if (settings.logoUrl) {
-                        document.getElementById('loadingLogo').src = getValidLogoUrl(settings.logoUrl);
-                    }
-                    if (settings.appName) {
-                        document.getElementById('loadingAppName').innerText = settings.appName;
-                        document.getElementById('appHeaderTitle').innerText = settings.appName;
-                        document.title = settings.appName + " - লাইভ স্পোর্টস ও টিভি";
-                    }
-                    if (settings.tagline) {
-                        document.getElementById('loadingTagline').innerText = settings.tagline;
-                    }
-                } else {
-                    // ডিফল্ট সেটিংস তৈরি
-                    const defaultSettings = {
-                        logoUrl: DEFAULT_LOGO_URL,
-                        appName: "Sportzfy TV",
-                        tagline: "লাইভ স্পোর্টস স্ট্রিমিং",
-                        updatedAt: Date.now()
-                    };
-                    loadingSettingsRef.set(defaultSettings);
-                    document.getElementById('loadingLogo').src = DEFAULT_LOGO_URL;
-                }
+                    if (settings.logoUrl) document.getElementById('loadingLogo').src = getValidLogoUrl(settings.logoUrl);
+                    if (settings.appName) { document.getElementById('loadingAppName').innerText = settings.appName; document.getElementById('appHeaderTitle').innerText = settings.appName; document.title = settings.appName + " - লাইভ স্পোর্টস ও টিভি"; }
+                    if (settings.tagline) document.getElementById('loadingTagline').innerText = settings.tagline;
+                } else { const defaultSettings = { logoUrl: DEFAULT_LOGO_URL, appName: "Sportzfy TV", tagline: "লাইভ স্পোর্টস স্ট্রিমিং", updatedAt: Date.now() }; loadingSettingsRef.set(defaultSettings); document.getElementById('loadingLogo').src = DEFAULT_LOGO_URL; }
             });
         }
 
         function hideLoadingScreen() {
             const loadingScreen = document.getElementById('loadingScreen');
             const mainContent = document.getElementById('mainAppContent');
-            
-            setTimeout(() => {
-                loadingScreen.classList.add('hide');
-                mainContent.classList.add('visible');
-                
-                setTimeout(() => {
-                    loadingScreen.style.display = 'none';
-                }, 500);
-            }, 1500);
+            setTimeout(() => { loadingScreen.classList.add('hide'); mainContent.classList.add('visible'); setTimeout(() => { loadingScreen.style.display = 'none'; updateFocusableElements(); }, 500); }, 1500);
         }
 
         function loadCategories() {
             categoriesRef.on('value', (snapshot) => {
                 categories = [];
-                if (snapshot.exists()) {
-                    snapshot.forEach((child) => { categories.push(child.val()); });
-                }
-                if (categories.length === 0) { categories = ['Sports', 'News', 'Movies', 'Kids', 'Music']; }
+                if (snapshot.exists()) snapshot.forEach((child) => { categories.push(child.val()); });
+                if (categories.length === 0) categories = ['Sports', 'News', 'Movies', 'Kids', 'Music'];
                 renderCategoryNav();
             });
         }
@@ -792,16 +805,14 @@
         function renderCategoryNav() {
             const container = document.getElementById('topCategoryNav');
             if (!container) return;
-            container.innerHTML = `<button onclick="filterChannels('All')" class="category-btn glass px-6 py-2 whitespace-nowrap active-tab">All</button>` +
-                categories.map(cat => `<button onclick="filterChannels('${cat.replace(/'/g, "\\'")}')" class="category-btn glass px-6 py-2 whitespace-nowrap">${cat}</button>`).join('');
+            container.innerHTML = `<button onclick="filterChannels('All')" class="category-btn glass px-6 py-2 whitespace-nowrap active-tab" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ') filterChannels('All')">All</button>` + categories.map(cat => `<button onclick="filterChannels('${cat.replace(/'/g, "\\'")}')" class="category-btn glass px-6 py-2 whitespace-nowrap" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ') filterChannels('${cat.replace(/'/g, "\\'")}')">${cat}</button>`).join('');
+            setTimeout(() => updateFocusableElements(), 100);
         }
 
         function loadChannels() {
             channelsRef.on('value', (snapshot) => {
                 const newChannels = [];
-                if (snapshot.exists()) {
-                    snapshot.forEach((child) => { newChannels.push({ id: child.key, ...child.val() }); });
-                }
+                if (snapshot.exists()) snapshot.forEach((child) => { newChannels.push({ id: child.key, ...child.val() }); });
                 channels = newChannels;
                 renderCurrentView();
                 hideLoadingScreen();
@@ -811,254 +822,138 @@
         function loadEvents() {
             eventsRef.on('value', (snapshot) => {
                 const newEvents = [];
-                if (snapshot.exists()) {
-                    snapshot.forEach((child) => { newEvents.push({ id: child.key, ...child.val() }); });
-                }
+                if (snapshot.exists()) snapshot.forEach((child) => { newEvents.push({ id: child.key, ...child.val() }); });
                 liveEvents = newEvents;
-                if (currentView === 'live') { renderHomeEvents(); }
+                if (currentView === 'live') renderHomeEvents();
             });
         }
 
-        function loadNotice() {
-            noticeRef.on('value', (snapshot) => {
-                const notice = snapshot.val();
-                document.getElementById('noticeText').innerHTML = (notice && notice.text) ? notice.text : '🏏 স্বাগতম Sportzfy TV তে! লাইভ স্পোর্টস উপভোগ করুন';
-            });
-        }
+        function loadNotice() { noticeRef.on('value', (snapshot) => { const notice = snapshot.val(); document.getElementById('noticeText').innerHTML = (notice && notice.text) ? notice.text : '🏏 স্বাগতম Sportzfy TV তে! লাইভ স্পোর্টস উপভোগ করুন'; }); }
 
-        function renderCurrentView() {
-            if (currentView === 'live') initApp();
-            else if (currentView === 'sports') showSportsGrid();
-            else if (currentView === 'categories') showCategoriesList();
-        }
+        function renderCurrentView() { if (currentView === 'live') initApp(); else if (currentView === 'sports') showSportsGrid(); else if (currentView === 'categories') showCategoriesList(); }
 
         function renderHomeEvents() {
             const eventDiv = document.getElementById('eventContainer');
             if (!eventDiv) return;
-            
             if (liveEvents.length > 0) {
-                eventDiv.innerHTML = liveEvents.map(ev => {
+                eventDiv.innerHTML = liveEvents.map((ev, idx) => {
                     const validT1Logo = getValidLogoUrl(ev.t1Logo);
                     const validT2Logo = getValidLogoUrl(ev.t2Logo);
-                    const safeEvent = {
-                        team1: ev.team1 || 'টিম ১', team2: ev.team2 || 'টিম ২', url: ev.url || TEST_STREAMS[0],
-                        t1Logo: validT1Logo, t2Logo: validT2Logo, type: ev.type || 'লাইভ ম্যাচ'
-                    };
+                    const safeEvent = { team1: ev.team1 || 'টিম ১', team2: ev.team2 || 'টিম ২', url: ev.url || TEST_STREAMS[0], t1Logo: validT1Logo, t2Logo: validT2Logo, type: ev.type || 'লাইভ ম্যাচ' };
                     const escapedEv = JSON.stringify(safeEvent).replace(/'/g, "&#39;");
-                    return `<div class="event-card" onclick='openPlayer(${escapedEv.replace(/"/g, '&quot;')}, true)'>
+                    return `<div class="event-card" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ') openPlayer(${escapedEv.replace(/"/g, '&quot;')}, true)" onclick='openPlayer(${escapedEv.replace(/"/g, '&quot;')}, true)'>
                         <div class="flex justify-center items-center gap-1 mb-1 text-[9px] font-bold text-gray-400"><i class="fa-solid fa-circle-nodes text-emerald-400"></i> ${ev.type || 'লাইভ ম্যাচ'}</div>
                         <div class="flex justify-between items-center px-4 md:px-8">
-                            <div class="flex flex-col items-center text-center w-24">
-                                <img src="${validT1Logo}" class="event-logo" onerror="this.src='${DEFAULT_LOGO_URL}'">
-                                <span class="text-[11px] md:text-[13px] font-bold mt-1 truncate max-w-[80px]">${ev.team1 || 'টিম ১'}</span>
-                            </div>
+                            <div class="flex flex-col items-center text-center w-24"><img src="${validT1Logo}" class="event-logo" onerror="this.src='${DEFAULT_LOGO_URL}'"><span class="text-[11px] md:text-[13px] font-bold mt-1 truncate max-w-[80px]">${ev.team1 || 'টিম ১'}</span></div>
                             <div class="flex flex-col items-center"><span class="live-dot mb-1"></span><span class="text-[8px] md:text-[10px] text-red-500 font-bold uppercase">Live Now</span></div>
-                            <div class="flex flex-col items-center text-center w-24">
-                                <img src="${validT2Logo}" class="event-logo" onerror="this.src='${DEFAULT_LOGO_URL}'">
-                                <span class="text-[11px] md:text-[13px] font-bold mt-1 truncate max-w-[80px]">${ev.team2 || 'টিম ২'}</span>
-                            </div>
+                            <div class="flex flex-col items-center text-center w-24"><img src="${validT2Logo}" class="event-logo" onerror="this.src='${DEFAULT_LOGO_URL}'"><span class="text-[11px] md:text-[13px] font-bold mt-1 truncate max-w-[80px]">${ev.team2 || 'টিম ২'}</span></div>
                         </div>
                         <div class="text-center bd-time mt-2"></div>
                     </div>`;
                 }).join('');
-            } else {
-                eventDiv.innerHTML = `<div class="glass p-4 text-center text-gray-400 mb-4">কোন লাইভ ইভেন্ট নেই</div>`;
-            }
+            } else { eventDiv.innerHTML = `<div class="glass p-4 text-center text-gray-400 mb-4">কোন লাইভ ইভেন্ট নেই</div>`; }
             updateTime();
+            setTimeout(() => updateFocusableElements(), 100);
         }
 
-        function updateTime() {
-            const now = new Date();
-            const timeStr = now.toLocaleTimeString('en-GB', { timeZone: 'Asia/Dhaka', hour12: false });
-            document.querySelectorAll('.bd-time').forEach(el => el.innerText = `🕒 ${timeStr}`);
-        }
+        function updateTime() { const now = new Date(); const timeStr = now.toLocaleTimeString('en-GB', { timeZone: 'Asia/Dhaka', hour12: false }); document.querySelectorAll('.bd-time').forEach(el => el.innerText = `🕒 ${timeStr}`); }
 
         function initApp() {
             currentView = 'live';
-            updateNav('btnLive');
+            setActiveNav('btnLive');
             const topNav = document.getElementById('topCategoryNav');
             if (topNav) topNav.style.display = 'flex';
             renderHomeEvents();
-            
             const grid = document.getElementById('channelGrid');
             if (!grid) return;
-            
-            if (channels.length === 0) {
-                grid.innerHTML = '<div class="loading-spinner"><i class="fa-solid fa-spinner fa-spin"></i> চ্যানেল লোড হচ্ছে...</div>';
-                return;
-            }
-            
+            if (channels.length === 0) { grid.innerHTML = '<div class="loading-spinner"><i class="fa-solid fa-spinner fa-spin"></i> চ্যানেল লোড হচ্ছে...</div>'; return; }
             grid.className = "channel-grid";
-            grid.innerHTML = channels.map(ch => {
+            grid.innerHTML = channels.map((ch, idx) => {
                 const validLogo = getValidLogoUrl(ch.logo);
-                const safeCh = {
-                    id: ch.id, name: ch.name || 'চ্যানেল', logo: validLogo,
-                    category: ch.category || 'জেনারেল', desc: ch.desc || '', url: ch.url || TEST_STREAMS[0]
-                };
+                const safeCh = { id: ch.id, name: ch.name || 'চ্যানেল', logo: validLogo, category: ch.category || 'জেনারেল', desc: ch.desc || '', url: ch.url || TEST_STREAMS[0] };
                 const escapedCh = JSON.stringify(safeCh).replace(/'/g, "&#39;");
-                return `<div class="glass p-4 channel-card rounded-xl" onclick='openPlayer(${escapedCh.replace(/"/g, '&quot;')}, false)'>
-                    <div class="flex gap-4 items-center">
-                        <img src="${validLogo}" class="channel-logo" onerror="this.src='${DEFAULT_LOGO_URL}'">
-                        <div>
-                            <h3 class="font-bold text-white">${escapeHtml(ch.name)}</h3>
-                            <span class="text-xs text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded inline-block mt-1">${ch.category || 'জেনারেল'}</span>
-                            <p class="text-[11px] text-gray-400 mt-1 truncate w-40">${escapeHtml(ch.desc || '')}</p>
-                        </div>
-                    </div>
+                return `<div class="glass p-4 channel-card rounded-xl" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ') openPlayer(${escapedCh.replace(/"/g, '&quot;')}, false)" onclick='openPlayer(${escapedCh.replace(/"/g, '&quot;')}, false)'>
+                    <div class="flex gap-4 items-center"><img src="${validLogo}" class="channel-logo" onerror="this.src='${DEFAULT_LOGO_URL}'"><div><h3 class="font-bold text-white">${escapeHtml(ch.name)}</h3><span class="text-xs text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded inline-block mt-1">${ch.category || 'জেনারেল'}</span><p class="text-[11px] text-gray-400 mt-1 truncate w-40">${escapeHtml(ch.desc || '')}</p></div></div>
                 </div>`;
             }).join('');
+            setTimeout(() => updateFocusableElements(), 100);
         }
 
-        function escapeHtml(str) { 
-            if (!str) return ''; 
-            return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])); 
-        }
+        function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])); }
 
         function showSportsGrid() {
             currentView = 'sports';
-            updateNav('btnSports');
+            setActiveNav('btnSports');
             const topNav = document.getElementById('topCategoryNav');
             if (topNav) topNav.style.display = 'none';
             document.getElementById('eventContainer').innerHTML = '';
             const grid = document.getElementById('channelGrid');
             const sports = channels.filter(c => c.category === 'Sports');
             grid.className = "sports-grid";
-            if(sports.length === 0) {
-                grid.innerHTML = '<p class="text-gray-400 text-center col-span-full">কোন স্পোর্টস চ্যানেল নেই</p>';
-            } else {
-                grid.innerHTML = sports.map(ch => {
+            if(sports.length === 0) { grid.innerHTML = '<p class="text-gray-400 text-center col-span-full">কোন স্পোর্টস চ্যানেল নেই</p>'; }
+            else {
+                grid.innerHTML = sports.map((ch, idx) => {
                     const validLogo = getValidLogoUrl(ch.logo);
                     const safeCh = { name: ch.name, url: ch.url, logo: validLogo };
                     const escapedCh = JSON.stringify(safeCh).replace(/'/g, "&#39;");
-                    return `<div class="text-center cursor-pointer bg-slate-800 p-3 rounded-xl hover:bg-slate-700 transition" onclick='openPlayer(${escapedCh.replace(/"/g, '&quot;')}, false)'>
-                        <div class="sports-circle"><img src="${validLogo}" onerror="this.src='${DEFAULT_LOGO_URL}'"></div>
-                        <p class="text-xs mt-1 truncate">${escapeHtml(ch.name)}</p>
+                    return `<div tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ') openPlayer(${escapedCh.replace(/"/g, '&quot;')}, false)" onclick='openPlayer(${escapedCh.replace(/"/g, '&quot;')}, false)'>
+                        <div class="text-center cursor-pointer bg-slate-800 p-3 rounded-xl hover:bg-slate-700 transition">
+                            <div class="sports-circle"><img src="${validLogo}" onerror="this.src='${DEFAULT_LOGO_URL}'"></div>
+                            <p class="text-xs mt-1 truncate">${escapeHtml(ch.name)}</p>
+                        </div>
                     </div>`;
                 }).join('');
             }
+            setTimeout(() => updateFocusableElements(), 100);
         }
 
         function showCategoriesList() {
             currentView = 'categories';
-            updateNav('btnCat');
+            setActiveNav('btnCat');
             const topNav = document.getElementById('topCategoryNav');
             if (topNav) topNav.style.display = 'none';
             document.getElementById('eventContainer').innerHTML = '';
             const grid = document.getElementById('channelGrid');
             grid.className = "grid grid-cols-2 gap-4";
-            grid.innerHTML = categories.map(cat => `<div class="cat-item" onclick="filterChannels('${cat.replace(/'/g, "\\'")}')"><div class="w-8 h-8 flex items-center justify-center bg-emerald-500/20 rounded-full text-lg">📁</div><span class="font-bold text-sm">${cat}</span></div>`).join('');
+            grid.innerHTML = categories.map(cat => `<div class="cat-item" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ') filterChannels('${cat.replace(/'/g, "\\'")}')" onclick="filterChannels('${cat.replace(/'/g, "\\'")}')"><div class="w-8 h-8 flex items-center justify-center bg-emerald-500/20 rounded-full text-lg">📁</div><span class="font-bold text-sm">${cat}</span></div>`).join('');
+            setTimeout(() => updateFocusableElements(), 100);
         }
 
         function filterChannels(cat) {
             document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active-tab'));
             const btns = document.querySelectorAll('.category-btn');
             btns.forEach(btn => { if(btn.innerText === cat || (cat === 'All' && btn.innerText === 'All')) btn.classList.add('active-tab'); });
-            
-            if(cat === 'All') { 
-                renderHomeEvents(); 
-                const filtered = channels; 
-                const grid = document.getElementById('channelGrid'); 
-                grid.className = "channel-grid"; 
-                grid.innerHTML = filtered.map(ch => {
-                    const validLogo = getValidLogoUrl(ch.logo);
-                    return `<div class="glass p-4 channel-card rounded-xl" onclick='openPlayer(${JSON.stringify({ name: ch.name, logo: validLogo, category: ch.category, url: ch.url }).replace(/'/g, "&#39;").replace(/"/g, '&quot;')}, false)'>
-                        <div class="flex gap-4 items-center">
-                            <img src="${validLogo}" class="channel-logo" onerror="this.src='${DEFAULT_LOGO_URL}'">
-                            <div><h3 class="font-bold text-white">${escapeHtml(ch.name)}</h3><span class="text-xs text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded inline-block mt-1">${ch.category || 'জেনারেল'}</span></div>
-                        </div>
-                    </div>`;
-                }).join(''); 
-                return; 
+            if(cat === 'All') {
+                renderHomeEvents();
+                const filtered = channels;
+                const grid = document.getElementById('channelGrid');
+                grid.className = "channel-grid";
+                grid.innerHTML = filtered.map(ch => { const validLogo = getValidLogoUrl(ch.logo); return `<div class="glass p-4 channel-card rounded-xl" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ') openPlayer(${JSON.stringify({ name: ch.name, logo: validLogo, category: ch.category, url: ch.url }).replace(/'/g, "&#39;").replace(/"/g, '&quot;')}, false)" onclick='openPlayer(${JSON.stringify({ name: ch.name, logo: validLogo, category: ch.category, url: ch.url }).replace(/'/g, "&#39;").replace(/"/g, '&quot;')}, false)'><div class="flex gap-4 items-center"><img src="${validLogo}" class="channel-logo" onerror="this.src='${DEFAULT_LOGO_URL}'"><div><h3 class="font-bold text-white">${escapeHtml(ch.name)}</h3><span class="text-xs text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded inline-block mt-1">${ch.category || 'জেনারেল'}</span></div></div></div>`; }).join('');
+                setTimeout(() => updateFocusableElements(), 100);
+                return;
             }
-            
             document.getElementById('eventContainer').innerHTML = '';
             const filtered = channels.filter(c => c.category === cat);
             const grid = document.getElementById('channelGrid');
             grid.className = "channel-grid";
-            if(filtered.length === 0) {
-                grid.innerHTML = `<p class="text-gray-400 text-center col-span-full">${cat} ক্যাটাগরিতে কোন চ্যানেল নেই</p>`;
-            } else {
-                grid.innerHTML = filtered.map(ch => {
-                    const validLogo = getValidLogoUrl(ch.logo);
-                    return `<div class="glass p-4 channel-card rounded-xl" onclick='openPlayer(${JSON.stringify({ name: ch.name, logo: validLogo, category: ch.category, url: ch.url }).replace(/'/g, "&#39;").replace(/"/g, '&quot;')}, false)'>
-                        <div class="flex gap-4 items-center">
-                            <img src="${validLogo}" class="channel-logo" onerror="this.src='${DEFAULT_LOGO_URL}'">
-                            <div><h3 class="font-bold text-white">${escapeHtml(ch.name)}</h3><span class="text-xs text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded inline-block mt-1">${ch.category}</span></div>
-                        </div>
-                    </div>`;
-                }).join('');
+            if(filtered.length === 0) { grid.innerHTML = `<p class="text-gray-400 text-center col-span-full">${cat} ক্যাটাগরিতে কোন চ্যানেল নেই</p>`; }
+            else {
+                grid.innerHTML = filtered.map(ch => { const validLogo = getValidLogoUrl(ch.logo); return `<div class="glass p-4 channel-card rounded-xl" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ') openPlayer(${JSON.stringify({ name: ch.name, logo: validLogo, category: ch.category, url: ch.url }).replace(/'/g, "&#39;").replace(/"/g, '&quot;')}, false)" onclick='openPlayer(${JSON.stringify({ name: ch.name, logo: validLogo, category: ch.category, url: ch.url }).replace(/'/g, "&#39;").replace(/"/g, '&quot;')}, false)'><div class="flex gap-4 items-center"><img src="${validLogo}" class="channel-logo" onerror="this.src='${DEFAULT_LOGO_URL}'"><div><h3 class="font-bold text-white">${escapeHtml(ch.name)}</h3><span class="text-xs text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded inline-block mt-1">${ch.category}</span></div></div></div>`; }).join('');
             }
+            setTimeout(() => updateFocusableElements(), 100);
         }
 
-        function updateNav(id) { 
-            document.querySelectorAll('.nav-btn').forEach(b => { b.classList.remove('text-emerald-400'); b.classList.add('text-gray-400'); }); 
-            const btn = document.getElementById(id); if(btn) { btn.classList.remove('text-gray-400'); btn.classList.add('text-emerald-400'); }
-        }
+        function toggleSearch() { const searchBar = document.getElementById('searchBar'); if (searchBar) { if (searchBar.classList.contains('hidden')) { searchBar.classList.remove('hidden'); pushUIState('search'); setTimeout(() => { document.getElementById('searchInput')?.focus(); updateFocusableElements(); }, 50); } else { searchBar.classList.add('hidden'); if (uiStateStack[uiStateStack.length-1] === 'search') uiStateStack.pop(); history.replaceState({ state: uiStateStack[uiStateStack.length-1] || 'default' }, ''); setTimeout(() => updateFocusableElements(), 100); } } }
         
-        function toggleSearch() { 
-            const searchBar = document.getElementById('searchBar');
-            if (searchBar) {
-                if (searchBar.classList.contains('hidden')) { 
-                    searchBar.classList.remove('hidden'); 
-                    pushUIState('search'); 
-                } else { 
-                    searchBar.classList.add('hidden'); 
-                    if (uiStateStack[uiStateStack.length-1] === 'search') uiStateStack.pop(); 
-                    history.replaceState({ state: uiStateStack[uiStateStack.length-1] || 'default' }, ''); 
-                }
-            }
-        }
-        
-        function searchChannels() { 
-            const term = document.getElementById('searchInput').value.toLowerCase(); 
-            const filtered = channels.filter(c => c.name && c.name.toLowerCase().includes(term)); 
-            const grid = document.getElementById('channelGrid');
-            if(!grid) return;
-            grid.className = "channel-grid";
-            if(filtered.length === 0) {
-                grid.innerHTML = '<p class="text-gray-400 text-center col-span-full">কোন চ্যানেল পাওয়া যায়নি</p>';
-            } else {
-                grid.innerHTML = filtered.map(ch => {
-                    const validLogo = getValidLogoUrl(ch.logo);
-                    return `<div class="glass p-4 channel-card rounded-xl" onclick='openPlayer(${JSON.stringify({ name: ch.name, logo: validLogo, category: ch.category, url: ch.url }).replace(/'/g, "&#39;").replace(/"/g, '&quot;')}, false)'>
-                        <div class="flex gap-4 items-center">
-                            <img src="${validLogo}" class="channel-logo" onerror="this.src='${DEFAULT_LOGO_URL}'">
-                            <div><h3 class="font-bold text-white">${escapeHtml(ch.name)}</h3><span class="text-xs text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded inline-block mt-1">${ch.category}</span></div>
-                        </div>
-                    </div>`;
-                }).join('');
-            }
-        }
+        function searchChannels() { const term = document.getElementById('searchInput').value.toLowerCase(); const filtered = channels.filter(c => c.name && c.name.toLowerCase().includes(term)); const grid = document.getElementById('channelGrid'); if(!grid) return; grid.className = "channel-grid"; if(filtered.length === 0) { grid.innerHTML = '<p class="text-gray-400 text-center col-span-full">কোন চ্যানেল পাওয়া যায়নি</p>'; } else { grid.innerHTML = filtered.map(ch => { const validLogo = getValidLogoUrl(ch.logo); return `<div class="glass p-4 channel-card rounded-xl" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ') openPlayer(${JSON.stringify({ name: ch.name, logo: validLogo, category: ch.category, url: ch.url }).replace(/'/g, "&#39;").replace(/"/g, '&quot;')}, false)" onclick='openPlayer(${JSON.stringify({ name: ch.name, logo: validLogo, category: ch.category, url: ch.url }).replace(/'/g, "&#39;").replace(/"/g, '&quot;')}, false)'><div class="flex gap-4 items-center"><img src="${validLogo}" class="channel-logo" onerror="this.src='${DEFAULT_LOGO_URL}'"><div><h3 class="font-bold text-white">${escapeHtml(ch.name)}</h3><span class="text-xs text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded inline-block mt-1">${ch.category}</span></div></div></div>`; }).join(''); } setTimeout(() => updateFocusableElements(), 100); }
 
-        function toggleDrawer() {
-            const drawer = document.getElementById('drawer');
-            const overlay = document.getElementById('drawerOverlay');
-            const isOpen = drawer.classList.contains('translate-x-0');
-            if (isOpen) { 
-                drawer.classList.replace('translate-x-0', '-translate-x-full'); 
-                overlay.style.display = 'none'; 
-                if (uiStateStack[uiStateStack.length-1] === 'drawer') uiStateStack.pop(); 
-                history.replaceState({ state: uiStateStack[uiStateStack.length-1] || 'default' }, ''); 
-            } else { 
-                drawer.classList.replace('-translate-x-full', 'translate-x-0'); 
-                overlay.style.display = 'block'; 
-                pushUIState('drawer'); 
-            }
-        }
+        function toggleDrawer() { const drawer = document.getElementById('drawer'); const overlay = document.getElementById('drawerOverlay'); const isOpen = drawer.classList.contains('translate-x-0'); if (isOpen) { drawer.classList.replace('translate-x-0', '-translate-x-full'); overlay.style.display = 'none'; if (uiStateStack[uiStateStack.length-1] === 'drawer') uiStateStack.pop(); history.replaceState({ state: uiStateStack[uiStateStack.length-1] || 'default' }, ''); setTimeout(() => updateFocusableElements(), 100); } else { drawer.classList.replace('-translate-x-full', 'translate-x-0'); overlay.style.display = 'block'; pushUIState('drawer'); setTimeout(() => { const drawerLinks = drawer.querySelectorAll('a, button'); if (drawerLinks.length > 0) drawerLinks[0]?.focus(); updateFocusableElements(); }, 100); } }
 
         function loadTelegramSettings() {
             telegramSettingsRef.on('value', (snap) => {
                 const settings = snap.val();
                 if (settings) {
-                    telegramSettings = {
-                        enabled: settings.enabled !== false,
-                        link: settings.link || '',
-                        heading: settings.heading || 'Join Our Channel',
-                        description: settings.description || settings.desc || 'Stay updated with latest matches and updates by joining our Telegram channel!',
-                        btnText: settings.btnText || 'Join Now',
-                        laterText: settings.laterText || 'Later',
-                        showDontShow: settings.showDontShow !== false
-                    };
+                    telegramSettings = { enabled: settings.enabled !== false, link: settings.link || '', heading: settings.heading || 'Join Our Channel', description: settings.description || settings.desc || 'Stay updated with latest matches and updates by joining our Telegram channel!', btnText: settings.btnText || 'Join Now', laterText: settings.laterText || 'Later', showDontShow: settings.showDontShow !== false };
                 }
                 updateTelegramPopupUI();
                 checkAndShowTelegramPopup();
@@ -1068,77 +963,23 @@
         function updateTelegramPopupUI() {
             document.getElementById('popupHeading').innerText = telegramSettings.heading;
             document.getElementById('popupDesc').innerText = telegramSettings.description;
-            
             let tgLink = telegramSettings.link;
-            if (tgLink && !tgLink.startsWith('http') && !tgLink.startsWith('https')) {
-                if (tgLink.startsWith('@')) {
-                    tgLink = 'https://t.me/' + tgLink.substring(1);
-                } else {
-                    tgLink = 'https://t.me/' + tgLink;
-                }
-            }
-            const joinBtn = document.getElementById('telegramJoinLink');
-            joinBtn.href = tgLink || 'https://t.me/sportzfy_updates';
-            joinBtn.innerText = telegramSettings.btnText;
-            
+            if (tgLink && !tgLink.startsWith('http') && !tgLink.startsWith('https')) { if (tgLink.startsWith('@')) tgLink = 'https://t.me/' + tgLink.substring(1); else tgLink = 'https://t.me/' + tgLink; }
+            const joinBtn = document.getElementById('telegramJoinLink'); joinBtn.href = tgLink || 'https://t.me/sportzfy_updates'; joinBtn.innerText = telegramSettings.btnText;
             document.getElementById('laterBtn').innerText = telegramSettings.laterText;
-            
-            const dontShowContainer = document.getElementById('dontShowContainer');
-            if (telegramSettings.showDontShow) {
-                dontShowContainer.style.display = 'flex';
-            } else {
-                dontShowContainer.style.display = 'none';
-            }
+            const dontShowContainer = document.getElementById('dontShowContainer'); if (telegramSettings.showDontShow) dontShowContainer.style.display = 'flex'; else dontShowContainer.style.display = 'none';
         }
 
-        function checkAndShowTelegramPopup() {
-            if (!telegramSettings.enabled) return;
-            if (popupClosedForSession) return;
-            
-            const dontShowAgain = localStorage.getItem('telegram_dont_show_again');
-            if (dontShowAgain === 'true') return;
-            
-            setTimeout(() => {
-                const popup = document.getElementById('telegramPopup');
-                if(popup) popup.classList.add('show');
-            }, 3000);
-        }
+        function checkAndShowTelegramPopup() { if (!telegramSettings.enabled) return; if (popupClosedForSession) return; const dontShowAgain = localStorage.getItem('telegram_dont_show_again'); if (dontShowAgain === 'true') return; setTimeout(() => { const popup = document.getElementById('telegramPopup'); if(popup) popup.classList.add('show'); setTimeout(() => updateFocusableElements(), 300); }, 3000); }
 
-        function closeTelegramPopup(permanently = false) {
-            const popup = document.getElementById('telegramPopup');
-            if(popup) popup.classList.remove('show');
-            if (permanently) {
-                localStorage.setItem('telegram_dont_show_again', 'true');
-            } else {
-                popupClosedForSession = true;
-            }
-        }
+        function closeTelegramPopup(permanently = false) { const popup = document.getElementById('telegramPopup'); if(popup) popup.classList.remove('show'); if (permanently) localStorage.setItem('telegram_dont_show_again', 'true'); else popupClosedForSession = true; setTimeout(() => updateFocusableElements(), 100); }
 
-        document.getElementById('laterBtn').addEventListener('click', () => {
-            closeTelegramPopup(false);
-        });
-        
-        document.getElementById('telegramJoinLink').addEventListener('click', () => {
-            const dontShowCheckbox = document.getElementById('dontShowAgain');
-            if (dontShowCheckbox && dontShowCheckbox.checked) {
-                localStorage.setItem('telegram_dont_show_again', 'true');
-            }
-            closeTelegramPopup(false);
-        });
-
-        if (document.getElementById('dontShowAgain')) {
-            document.getElementById('dontShowAgain').addEventListener('change', (e) => {
-                if (e.target.checked) {
-                    localStorage.setItem('telegram_dont_show_again', 'true');
-                } else {
-                    localStorage.removeItem('telegram_dont_show_again');
-                }
-            });
-        }
+        document.getElementById('laterBtn').addEventListener('click', () => { closeTelegramPopup(false); });
+        document.getElementById('telegramJoinLink').addEventListener('click', () => { const dontShowCheckbox = document.getElementById('dontShowAgain'); if (dontShowCheckbox && dontShowCheckbox.checked) localStorage.setItem('telegram_dont_show_again', 'true'); closeTelegramPopup(false); });
+        if (document.getElementById('dontShowAgain')) { document.getElementById('dontShowAgain').addEventListener('change', (e) => { if (e.target.checked) localStorage.setItem('telegram_dont_show_again', 'true'); else localStorage.removeItem('telegram_dont_show_again'); }); }
 
         setInterval(updateTime, 1000);
 
-        // সবকিছু লোড করুন
         loadLoadingSettings();
         loadCategories();
         loadChannels();
@@ -1154,6 +995,7 @@
         window.initApp = initApp;
         window.showSportsGrid = showSportsGrid;
         window.showCategoriesList = showCategoriesList;
+        window.setActiveNav = setActiveNav;
     </script>
 </body>
 </html>
