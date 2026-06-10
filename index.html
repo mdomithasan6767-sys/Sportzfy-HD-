@@ -2,7 +2,8 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <!-- এখানে viewport-fit=cover যুক্ত করা হয়েছে যা ক্যামেরার কালো অংশ সরিয়ে পুরো স্ক্রিন ব্যবহার করবে -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <title>Sportzfy TV - লাইভ স্পোর্টস ও টিভি</title>
     
     <!-- Font Awesome -->
@@ -33,6 +34,7 @@
             color: white;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             overflow-x: hidden;
+            margin: 0; padding: 0;
         }
         .glass {
             background: var(--glass);
@@ -174,78 +176,70 @@
             backdrop-filter: blur(3px);
         }
         
-        /* JW Player Modal Styles - Landscape mode */
+        /* সম্পূর্ণ ডিসপ্লে জুড়েই ১০০% নো-বর্ডার ফুল স্ক্রিন মোড (ক্যামেরার এলাকা সহ) */
         .video-modal {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #000;
+            top: 0; left: 0; right: 0; bottom: 0;
+            width: 100vw !important;
+            height: 100vh !important;
+            background: #000000;
             z-index: 1000;
             display: flex;
             align-items: center;
             justify-content: center;
             opacity: 0;
             visibility: hidden;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
+            margin: 0 !important; padding: 0 !important; 
+            overflow: hidden !important;
         }
         .video-modal.active {
             opacity: 1;
             visibility: visible;
         }
         .video-modal-content {
-            width: 100%;
-            height: 100%;
-            background: #0a0a0a;
+            width: 100% !important;
+            height: 100% !important;
+            background: #000000;
             position: relative;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        .video-modal.active .video-modal-content {
-            width: 100vh;
-            height: 100vw;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-49%, -50%) rotate(90deg);
+            margin: 0 !important; padding: 0 !important; 
+            overflow: hidden !important;
         }
         
-        /* ========== জুম বন্ধ করার জন্য CSS ========== */
-        #jwPlayerContainer video,
-        #jwPlayerContainer .jw-video,
-        .jw-video,
-        video {
-            touch-action: none !important;
-        }
-        
-        .video-modal-content {
-            touch-action: pan-x pan-y !important;
-        }
-        /* ======================================== */
-        
+        /* ব্যাক বাটন স্টাইল */
         .player-back-icon {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 1002;
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            z-index: 2147483647; 
             cursor: pointer;
             transition: all 0.2s;
+            background: rgba(0, 0, 0, 0.6);
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
         }
         .player-back-icon i {
-            font-size: 20px;
-            color: rgba(255, 255, 255, 0.7);
-            text-shadow: 0 0 3px rgba(0,0,0,0.5);
-        }
-        .player-back-icon:hover i {
+            font-size: 16px;
             color: #FFFFFF;
-            transform: scale(1.05);
         }
         
         #jwPlayerContainer {
-            width: 100%;
-            height: 100%;
+            width: 100% !important;
+            height: 100% !important;
+            margin: 0 !important; padding: 0 !important;
+        }
+
+        /* ক্যামেরার দিক ও চারপাশের সকল ফাঁকা জায়গা জোরপূর্বক বন্ধ করার জন্য সিএসএস */
+        #jwPlayerContainer video {
+            object-fit: fill !important;
+            width: 100% !important;
+            height: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
         }
         
         /* Telegram popup styles */
@@ -298,13 +292,13 @@
         </div>
     </div>
 
-    <!-- Video Player Modal with JW Player (CDNBye P2P Enabled) -->
+    <!-- Video Player Modal with JW Player -->
     <div id="videoPlayerModal" class="video-modal">
-        <div class="video-modal-content">
+        <div class="video-modal-content" id="modalContentBlock">
             <div class="player-back-icon" onclick="closeVideoPlayer()">
                 <i class="fa-solid fa-arrow-left"></i>
             </div>
-            <div id="jwPlayerContainer" style="width: 100%; height: 100%;"></div>
+            <div id="jwPlayerContainer"></div>
         </div>
     </div>
 
@@ -371,7 +365,7 @@
     </nav>
 
     <script>
-        // ======================== JW Player with CDNBye P2P ========================
+        // ======================== JW Player with Fullscreen Stretching ========================
         jwplayer.key = "uoW6qHjBL3KNudxKVnwa3rt5LlTakbko9e6aQ6VUyKQ=";
         
         let currentJWPlayer = null;
@@ -381,31 +375,25 @@
             
             const modal = document.getElementById('videoPlayerModal');
             const container = document.getElementById('jwPlayerContainer');
+            const modalContent = document.getElementById('modalContentBlock');
             
-            // Destroy previous player if exists (এটি অডিও বন্ধ করার জন্য গুরুত্বপূর্ণ)
             if (currentJWPlayer) {
-                try {
-                    currentJWPlayer.stop();      // স্ট্রিম থামানো
-                    currentJWPlayer.destroy();   // প্লেয়ার ধ্বংস করা
-                } catch(e) {
-                    console.log("Error destroying player:", e);
-                }
+                try { currentJWPlayer.destroy(); } catch(e) {}
                 currentJWPlayer = null;
             }
             
-            // Clear container
             container.innerHTML = '<div id="jwplayer"></div>';
             
-            // Setup new JW Player with P2P
+            // stretching: "exact" সেট করা হয়েছে যেন ভিডিও পুরো ডিসপ্লে জুড়ে ফিট হয়
             currentJWPlayer = jwplayer('jwplayer').setup({
                 file: url,
                 width: '100%',
                 height: '100%',
                 autostart: true,
                 controls: true,
+                stretching: "exact", 
                 abouttext: '',
                 aboutlink: '',
-                primary: 'html5',
                 hlsjsConfig: {
                     enableWorker: true,
                     lowLatencyMode: true,
@@ -416,83 +404,84 @@
                 },
             });
             
-            // প্লেয়ারের এরর হ্যান্ডলিং
-            currentJWPlayer.on('error', function(e) {
-                console.log("Player error:", e);
-            });
-            
-            // Show modal with landscape rotation
             modal.classList.add('active');
             
-            // Lock orientation
+            // ব্রাউজার বা অ্যাপে ফুলস্ক্রিন রিকোয়েস্ট করা
+            if (modalContent.requestFullscreen) {
+                modalContent.requestFullscreen();
+            } else if (modalContent.webkitRequestFullscreen) {
+                modalContent.webkitRequestFullscreen();
+            } else if (modalContent.mozRequestFullScreen) {
+                modalContent.mozRequestFullScreen();
+            } else if (modalContent.msRequestFullscreen) {
+                modalContent.msRequestFullscreen();
+            }
+
+            // স্ক্রিন ল্যান্ডস্কেপ মোডে লক করা
             try {
                 if (screen.orientation && screen.orientation.lock) {
                     screen.orientation.lock('landscape').catch(e => console.log("Orientation lock not supported"));
                 }
             } catch(e) {}
             
+            // ক্যামেরার দিকসহ সকল বর্ডার দূর করতে ইনস্ট্যান্টলি ভিডিও ট্যাগের সিএসএস পরিবর্তন করা
+            setTimeout(() => {
+                const vNode = container.querySelector('video');
+                if(vNode) {
+                    vNode.style.setProperty('object-fit', 'fill', 'important');
+                    vNode.style.setProperty('width', '100%', 'important');
+                    vNode.style.setProperty('height', '100%', 'important');
+                }
+            }, 300);
+
             pushUIState('player');
         }
         
         function closeVideoPlayer() {
             const modal = document.getElementById('videoPlayerModal');
-            
-            // গুরুত্বপূর্ণ: প্লেয়ার সম্পূর্ণরূপে বন্ধ করা এবং অডিও থামানো
             if (currentJWPlayer) {
-                try {
-                    currentJWPlayer.stop();      // স্ট্রিম থামানো
-                    currentJWPlayer.destroy();   // প্লেয়ার ধ্বংস করা
-                } catch(e) {
-                    console.log("Error during player cleanup:", e);
-                }
+                try { currentJWPlayer.destroy(); } catch(e) {}
                 currentJWPlayer = null;
             }
             
-            // কন্টেইনার ক্লিয়ার করা
-            const container = document.getElementById('jwPlayerContainer');
-            if (container) {
-                container.innerHTML = '';
+            if (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement) {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if (document.mozCancelFullScreen) {
+                    document.mozCancelFullScreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                }
             }
-            
-            if (modal && modal.classList.contains('active')) {
+
+            try {
+                if (screen.orientation && screen.orientation.unlock) {
+                    screen.orientation.unlock();
+                }
+            } catch(e) {}
+
+            if (modal.classList.contains('active')) {
                 modal.classList.remove('active');
-                try {
-                    if (screen.orientation && screen.orientation.unlock) {
-                        screen.orientation.unlock();
-                    }
-                } catch(e) {}
-            }
-            
-            // স্ট্যাক থেকে প্লেয়ার স্টেট রিমুভ
-            if (uiStateStack[uiStateStack.length-1] === 'player') {
-                uiStateStack.pop();
-                history.back();
             }
         }
         
-        // ব্যাক বাটন হ্যান্ডলিং - প্লেয়ার খোলা থাকলে বন্ধ হবে
-        function handleBackButton() {
-            const modal = document.getElementById('videoPlayerModal');
-            if (modal && modal.classList.contains('active')) {
-                closeVideoPlayer();
-                return true;
+        // ফুলস্ক্রিন চেঞ্জ ট্র্যাকিং
+        const onFSChange = () => {
+            if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement) {
+                const modal = document.getElementById('videoPlayerModal');
+                if (modal && modal.classList.contains('active')) {
+                    closeVideoPlayer();
+                }
             }
-            const drawer = document.getElementById('drawer');
-            if (drawer && drawer.classList.contains('translate-x-0')) {
-                toggleDrawer();
-                return true;
-            }
-            const searchBar = document.getElementById('searchBar');
-            if (searchBar && !searchBar.classList.contains('hidden')) {
-                searchBar.classList.add('hidden');
-                return true;
-            }
-            return false;
-        }
-        
+        };
+        document.addEventListener('fullscreenchange', onFSChange);
+        document.addEventListener('webkitfullscreenchange', onFSChange);
+        document.addEventListener('mozfullscreenchange', onFSChange);
+
         // ======================== Sportzfy TV Logic ========================
         
-        // Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyAFBTPu9kk46xj8QWTdl-WaBZHDKjxCOzU",
             authDomain: "sportzfy-tv-5ab8d.firebaseapp.com",
@@ -517,13 +506,9 @@
         let currentView = 'live';
         let uiStateStack = [];
         let telegramSettings = {
-            enabled: true,
-            link: '',
-            heading: 'Join Our Channel',
+            enabled: true, link: '', heading: 'Join Our Channel',
             description: 'Stay updated with latest matches and updates by joining our Telegram channel!',
-            btnText: 'Join Now',
-            laterText: 'Later',
-            showDontShow: true
+            btnText: 'Join Now', laterText: 'Later', showDontShow: true
         };
         let popupClosedForSession = false;
 
@@ -546,6 +531,25 @@
             streamUrl = getValidStreamUrl(streamUrl);
             openPlayerWithJW(streamUrl, item.name || (isEvent ? `${item.team1} vs ${item.team2}` : ''));
         }
+        
+        function handleBackButton() {
+            const modal = document.getElementById('videoPlayerModal');
+            if (modal && modal.classList.contains('active')) {
+                closeVideoPlayer();
+                return true;
+            }
+            const drawer = document.getElementById('drawer');
+            if (drawer && drawer.classList.contains('translate-x-0')) {
+                toggleDrawer();
+                return true;
+            }
+            const searchBar = document.getElementById('searchBar');
+            if (searchBar && !searchBar.classList.contains('hidden')) {
+                searchBar.classList.add('hidden');
+                return true;
+            }
+            return false;
+        }
 
         function pushUIState(state) {
             uiStateStack.push(state);
@@ -565,13 +569,9 @@
             categoriesRef.on('value', (snapshot) => {
                 categories = [];
                 if (snapshot.exists()) {
-                    snapshot.forEach((child) => {
-                        categories.push(child.val());
-                    });
+                    snapshot.forEach((child) => { categories.push(child.val()); });
                 }
-                if (categories.length === 0) {
-                    categories = ['Sports', 'News', 'Movies', 'Kids', 'Music'];
-                }
+                if (categories.length === 0) { categories = ['Sports', 'News', 'Movies', 'Kids', 'Music']; }
                 renderCategoryNav();
             });
         }
@@ -587,12 +587,7 @@
             channelsRef.on('value', (snapshot) => {
                 const newChannels = [];
                 if (snapshot.exists()) {
-                    snapshot.forEach((child) => {
-                        newChannels.push({
-                            id: child.key,
-                            ...child.val()
-                        });
-                    });
+                    snapshot.forEach((child) => { newChannels.push({ id: child.key, ...child.val() }); });
                 }
                 channels = newChannels;
                 renderCurrentView();
@@ -603,17 +598,10 @@
             eventsRef.on('value', (snapshot) => {
                 const newEvents = [];
                 if (snapshot.exists()) {
-                    snapshot.forEach((child) => {
-                        newEvents.push({
-                            id: child.key,
-                            ...child.val()
-                        });
-                    });
+                    snapshot.forEach((child) => { newEvents.push({ id: child.key, ...child.val() }); });
                 }
                 liveEvents = newEvents;
-                if (currentView === 'live') {
-                    renderHomeEvents();
-                }
+                if (currentView === 'live') { renderHomeEvents(); }
             });
         }
 
@@ -637,12 +625,8 @@
             if (liveEvents.length > 0) {
                 eventDiv.innerHTML = liveEvents.map(ev => {
                     const safeEvent = {
-                        team1: ev.team1 || 'টিম ১',
-                        team2: ev.team2 || 'টিম ২',
-                        url: ev.url || TEST_STREAMS[0],
-                        t1Logo: ev.t1Logo || '',
-                        t2Logo: ev.t2Logo || '',
-                        type: ev.type || 'লাইভ ম্যাচ'
+                        team1: ev.team1 || 'টিম ১', team2: ev.team2 || 'টিম ২', url: ev.url || TEST_STREAMS[0],
+                        t1Logo: ev.t1Logo || '', t2Logo: ev.t2Logo || '', type: ev.type || 'লাইভ ম্যাচ'
                     };
                     const escapedEv = JSON.stringify(safeEvent).replace(/'/g, "&#39;");
                     return `<div class="event-card" onclick='openPlayer(${escapedEv.replace(/"/g, '&quot;')}, true)'>
@@ -685,12 +669,8 @@
             grid.className = "channel-grid";
             grid.innerHTML = channels.map(ch => {
                 const safeCh = {
-                    id: ch.id,
-                    name: ch.name || 'চ্যানেল',
-                    logo: ch.logo || '',
-                    category: ch.category || 'জেনারেল',
-                    desc: ch.desc || '',
-                    url: ch.url || TEST_STREAMS[0]
+                    id: ch.id, name: ch.name || 'চ্যানেল', logo: ch.logo || '',
+                    category: ch.category || 'জেনারেল', desc: ch.desc || '', url: ch.url || TEST_STREAMS[0]
                 };
                 const escapedCh = JSON.stringify(safeCh).replace(/'/g, "&#39;");
                 return `<div class="glass p-4 channel-card rounded-xl" onclick='openPlayer(${escapedCh.replace(/"/g, '&quot;')}, false)'>
@@ -862,13 +842,13 @@
             
             setTimeout(() => {
                 const popup = document.getElementById('telegramPopup');
-                popup.classList.add('show');
+                if(popup) popup.classList.add('show');
             }, 3000);
         }
 
         function closeTelegramPopup(permanently = false) {
             const popup = document.getElementById('telegramPopup');
-            popup.classList.remove('show');
+            if(popup) popup.classList.remove('show');
             if (permanently) {
                 localStorage.setItem('telegram_dont_show_again', 'true');
             } else {
@@ -906,7 +886,6 @@
         loadNotice();
         loadTelegramSettings();
 
-        // Make functions global
         window.openPlayer = openPlayer;
         window.closeVideoPlayer = closeVideoPlayer;
         window.filterChannels = filterChannels;
