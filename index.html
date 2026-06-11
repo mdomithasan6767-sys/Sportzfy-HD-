@@ -431,6 +431,8 @@
             outline-offset: 1px;
         }
     </style>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#00ff88">
 </head>
 <body>
 
@@ -997,5 +999,40 @@
         window.showCategoriesList = showCategoriesList;
         window.setActiveNav = setActiveNav;
     </script>
+<script>
+let deferredPrompt;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+
+    const installBtn = document.createElement('button');
+    installBtn.innerHTML = '<i class="fa-solid fa-download"></i> Add Home Screen';
+    installBtn.id = 'installAppBtn';
+
+    installBtn.style.cssText = `
+        position:fixed;
+        bottom:80px;
+        right:15px;
+        z-index:9999;
+        background:#00ff88;
+        color:#000;
+        border:none;
+        padding:12px 16px;
+        border-radius:50px;
+        font-weight:bold;
+        cursor:pointer;
+    `;
+
+    document.body.appendChild(installBtn);
+
+    installBtn.addEventListener('click', async () => {
+        installBtn.style.display = 'none';
+        deferredPrompt.prompt();
+        await deferredPrompt.userChoice;
+        deferredPrompt = null;
+    });
+});
+</script>
 </body>
 </html>
