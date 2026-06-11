@@ -1003,11 +1003,42 @@
         window.showSportsGrid = showSportsGrid;
         window.showCategoriesList = showCategoriesList;
         window.setActiveNav = setActiveNav;
-    </script>
-    </script>
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js');
-}
+    <script>
+    // Service Worker রেজিস্টার
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js')
+                .then(reg => console.log('Service Worker registered:', reg))
+                .catch(err => console.log('Service Worker error:', err));
+        });
+    }
+    
+    // অ্যাপ ইনস্টল প্রম্পট
+    let deferredPrompt;
+    const installBtn = document.createElement('button');
+    installBtn.textContent = '📱 অ্যাপ ইনস্টল করুন';
+    installBtn.style.position = 'fixed';
+    installBtn.style.bottom = '20px';
+    installBtn.style.right = '20px';
+    installBtn.style.background = '#ff0000';
+    installBtn.style.color = 'white';
+    installBtn.style.border = 'none';
+    installBtn.style.padding = '15px 25px';
+    installBtn.style.borderRadius = '50px';
+    installBtn.style.zIndex = '9999';
+    installBtn.style.display = 'none';
+    document.body.appendChild(installBtn);
+    
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        installBtn.style.display = 'block';
+        
+        installBtn.addEventListener('click', () => {
+            installBtn.style.display = 'none';
+            deferredPrompt.prompt();
+        });
+    });
 </script>
 </body>
 </html>
