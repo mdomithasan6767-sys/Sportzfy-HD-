@@ -431,12 +431,12 @@
             outline-offset: 1px;
         }
     </style>
-<!-- PWA ও হোম স্ক্রিন অ্যাড করার জন্য প্রয়োজনীয় মেটা ট্যাগ -->
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#0d6efd">
+<meta name="theme-color" content="#FF0000">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Sportzfy Tv">
+<link rel="apple-touch-icon" href="https://i.postimg.cc/R0xj2GXq/Picsart-26-06-03-23-41-20-367.jpg">
 </head>
 <body>
 
@@ -1003,13 +1003,38 @@
         window.showCategoriesList = showCategoriesList;
         window.setActiveNav = setActiveNav;
     </script>
-  <!-- সমস্ত JS কোড একদম নিচে বসবে -->
-    <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js')
-                .then(() => console.log('Service Worker Registered!'))
-                .catch(err => console.log('Service Worker Error:', err));
-        }
-    </script>
+  <button id="installBtn" style="display:none; position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#FF0000; color:white; border:none; padding:12px 24px; border-radius:50px; font-size:16px; font-weight:bold; cursor:pointer; z-index:999; font-family:sans-serif;">
+  📲 অ্যাপ ইনস্টল করুন
+</button>
+
+<script>
+// Service Worker রেজিস্টার
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js')
+    .then(reg => console.log('✅ SW রেজিস্টার সফল:', reg))
+    .catch(err => console.log('❌ SW রেজিস্টার ব্যর্থ:', err));
+}
+
+// ইনস্টল প্রম্পট
+let deferredPrompt;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  
+  const installBtn = document.getElementById('installBtn');
+  if (installBtn) {
+    installBtn.style.display = 'flex';
+    
+    installBtn.addEventListener('click', async () => {
+      installBtn.style.display = 'none';
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      console.log(`ইউজার ${outcome} করেছেন`);
+      deferredPrompt = null;
+    });
+  }
+});
+</script>
 </body>
 </html>
