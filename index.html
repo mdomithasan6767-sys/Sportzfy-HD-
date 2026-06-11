@@ -431,7 +431,7 @@
             outline-offset: 1px;
         }
     </style>
-    <!-- PWA ও হোম স্ক্রিন অ্যাড করার জন্য প্রয়োজনীয় মেটা ট্যাগ -->
+<!-- PWA ও হোম স্ক্রিন অ্যাড করার জন্য প্রয়োজনীয় মেটা ট্যাগ -->
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0d6efd">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1002,12 +1002,14 @@
         window.showSportsGrid = showSportsGrid;
         window.showCategoriesList = showCategoriesList;
         window.setActiveNav = setActiveNav;
+    </script>
+  <!-- সমস্ত JS কোড একদম নিচে বসবে -->
     <script>
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('sw.js')
-            .then(reg => console.log('✅ SW registered:', reg))
-            .catch(err => console.log('❌ SW error:', err));
-    }
-</script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js')
+                .then(() => console.log('Service Worker Registered!'))
+                .catch(err => console.log('Service Worker Error:', err));
+        }
+    </script>
 </body>
 </html>
