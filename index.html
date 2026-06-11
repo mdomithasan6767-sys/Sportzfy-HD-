@@ -1003,23 +1003,9 @@
         window.showCategoriesList = showCategoriesList;
         window.setActiveNav = setActiveNav;
     </script>
-<script>
-let deferredPrompt = null;
-
-/* Install Button Code */
-window.addEventListener('beforeinstallprompt', (e) => {
-   ...
-});
-window.addEventListener('appinstalled', () => {
-   ...
-});
-</script>
-
-<script>
+    </script>
 if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js');
-    });
+  navigator.serviceWorker.register('/sw.js');
 }
 </script>
 </body>
