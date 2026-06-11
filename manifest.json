@@ -1,0 +1,15 @@
+{
+  "name": "Sportzfy TV",
+  "short_name": "Sportzfy",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#00ff88",
+  "icons": [
+    {
+      "src": "https://i.postimg.cc/yYvM1dRS/20260610-235713.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}
