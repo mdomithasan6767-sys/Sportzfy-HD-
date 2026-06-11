@@ -10,13 +10,13 @@
   "icons": [
     {
       "src": "https://i.postimg.cc/8zVhfn45/Picsart-26-06-03-23-30-42-238.png",
-      "sizes": "512x512",
+      "sizes": "250x250",
       "type": "image/jpeg",
       "purpose": "any maskable"
     },
     {
       "src": "https://i.postimg.cc/R0xj2GXq/Picsart-26-06-03-23-41-20-367.jpg",
-      "sizes": "192x192",
+      "sizes": "160x160",
       "type": "image/jpeg"
     }
   ]
