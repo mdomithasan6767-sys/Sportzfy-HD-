@@ -431,13 +431,12 @@
             outline-offset: 1px;
         }
     </style>
-<!-- PWA ও হোম স্ক্রিন অ্যাড করার জন্য মেটা ট্যাগ -->
+    <!-- PWA ও হোম স্ক্রিন অ্যাড করার জন্য প্রয়োজনীয় মেটা ট্যাগ -->
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#ff0000">
+<meta name="theme-color" content="#0d6efd">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Sportzfy TV">
-<link rel="apple-touch-icon" href="icon.png">
+<meta name="apple-mobile-web-app-title" content="Sportzfy Tv">
 </head>
 <body>
 
@@ -1004,59 +1003,11 @@
         window.showCategoriesList = showCategoriesList;
         window.setActiveNav = setActiveNav;
     <script>
-    // Service Worker রেজিস্টার (সঠিক পাথ সহ)
     if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('sw.js')  // '/' না দিয়ে সরাসরি 'sw.js'
-                .then(reg => console.log('✅ Service Worker registered:', reg))
-                .catch(err => console.log('❌ Service Worker error:', err));
-        });
+        navigator.serviceWorker.register('sw.js')
+            .then(reg => console.log('✅ SW registered:', reg))
+            .catch(err => console.log('❌ SW error:', err));
     }
-    
-    // অ্যাপ ইনস্টল প্রম্পট
-    let deferredPrompt;
-    
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        
-        // বাটন তৈরি করুন (যদি ইতিমধ্যে না থাকে)
-        if (!document.getElementById('installBtn')) {
-            const installBtn = document.createElement('button');
-            installBtn.id = 'installBtn';
-            installBtn.textContent = '📱 অ্যাপ ইনস্টল করুন';
-            installBtn.style.position = 'fixed';
-            installBtn.style.bottom = '20px';
-            installBtn.style.right = '20px';
-            installBtn.style.background = '#ff0000';
-            installBtn.style.color = 'white';
-            installBtn.style.border = 'none';
-            installBtn.style.padding = '12px 24px';
-            installBtn.style.borderRadius = '30px';
-            installBtn.style.zIndex = '9999';
-            installBtn.style.cursor = 'pointer';
-            installBtn.style.fontSize = '16px';
-            installBtn.style.boxShadow = '0 4px 15px rgba(0,0,0,0.3)';
-            document.body.appendChild(installBtn);
-            
-            installBtn.addEventListener('click', async () => {
-                installBtn.style.display = 'none';
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                console.log(`User response: ${outcome}`);
-                deferredPrompt = null;
-            });
-        }
-        
-        document.getElementById('installBtn').style.display = 'block';
-    });
-    
-    // অ্যাপ ইন্সটল হয়ে গেলে বাটন লুকান
-    window.addEventListener('appinstalled', () => {
-        const btn = document.getElementById('installBtn');
-        if (btn) btn.style.display = 'none';
-        console.log('✅ App installed successfully');
-    });
 </script>
 </body>
 </html>
